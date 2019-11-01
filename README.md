@@ -1,4 +1,4 @@
-# `tlverse` workshop at Gates Foundation Seattle Meeting 2019
+# `tlverse` workshop at Gates Foundation Meeting 2019
 
 [![Travis-CI Build Status](https://travis-ci.org/tlverse/gates2019-workshop.svg?branch=master)](https://travis-ci.org/tlverse/gates2019-workshop)
 Note: `travis-ci` currently deploys the developmental version of this workshop

@@ -8,4 +8,3 @@ git commit -m "Update workshop book from local build" || true
 git push origin gh-pages
 cd ../
 rm -rf book-output
-
