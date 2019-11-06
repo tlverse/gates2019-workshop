@@ -129,3 +129,8 @@ user (you'll need a GitHub user account). Follow these two steps:
 
 After following these steps, you should be able to successfully install the
 package which threw the error above.
+
+This workshop has other dependencies, which you can install using the following
+linked script:
+
+* [install.R](https://github.com/tlverse/gates2019-workshop/blob/master/install.R)
