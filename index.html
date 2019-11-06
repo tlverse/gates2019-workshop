@@ -244,7 +244,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1 class="title">Targeted Learning with the <code>tlverse</code> Software Ecosystem</h1>
 <h2 class="subtitle"><em>Workshop, 13 November 2019, Gates Foundation</em></h2>
 <p class="author"><em>Mark van der Laan, Alan Hubbard, Jeremy Coyle, Nima Hejazi, Ivana Malenica, Rachael Phillips</em></p>
-<p class="date"><em>updated: November 01, 2019</em></p>
+<p class="date"><em>updated: November 06, 2019</em></p>
 </div>
 <div id="preface" class="section level1 unnumbered">
 <h1>Preface</h1>
@@ -269,12 +269,9 @@ resource to these workshop materials.</p>
 <p><strong>Software installation</strong>
 Please install the relevant software before the workshop.</p>
 <ul>
-<li><a href="https://github.com/tlverse/gates2019-workshop/blob/master/install.R">installation
+<li><a href="tlverse.html#installtlverse">installation
 script</a></li>
 </ul>
-<p>You will probably exceed the GitHub API rate limit during this installation, and this
-will throw an error. This issue and the solution are addressed
-<a href="tlverse.html#installtlverse">here</a>.</p>
 <p><strong>Code</strong>
 <code>R</code> script files for each section of the workshop are available via the GitHub
 repository for the short course.</p>
@@ -316,8 +313,6 @@ Benefits</a> data</li>
 revolution</a></li>
 <li>Ensemble machine learning with the
 <a href="https://github.com/tlverse/sl3"><code>sl3</code></a> <code>R</code> package</li>
-<li>Targeted learning for causal inference with the
-<a href="https://github.com/tlverse/tmle3"><code>tmle3</code></a> <code>R</code> package</li>
 <li>Targeted learning for causal inference with the
 <a href="https://github.com/tlverse/tmle3"><code>tmle3</code></a> <code>R</code> package</li>
 </ul>
@@ -391,12 +386,12 @@ adaptive sequential designs.</p>
 <h3>Rachael Phillips</h3>
 <p>Rachael is a Ph.D. student in biostatistics, advised by Alan Hubbard and Mark
 van der Laan. She has an M.A. in Biostatistics, B.S. in Biology with a Chemistry
-minor and a B.A. in Mathematics with a Spanish minor. Her research is applied,
-and specific to human health. Motivated by issues arising in healthcare, Rachael
-leverages strategies rooted in causal inference and nonparametric estimation to
-build clinician-tailored, machine-driven solutions. Her accompanying statistical
-interests include high-dimensional statistics and experimental design. She is
-also passionate about free, online-mediated education.</p>
+minor and a B.A. in Mathematics with a Spanish minor. Motivated by issues
+arising in health care, Rachael leverages strategies rooted in causal inference
+and nonparametric estimation to build clinician-tailored, machine-driven
+solutions. Her accompanying statistical interests include high-dimensional
+statistics and experimental design. She is also passionate about free,
+online-mediated education.</p>
 
 </div>
 </div>
@@ -423,15 +418,14 @@ also passionate about free, online-mediated education.</p>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": {
-"github": true,
 "facebook": false,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"],
+"github": true
 },
 "fontsettings": {
 "theme": "white",

@@ -375,6 +375,11 @@ interface.</li>
 </ol>
 <p>After following these steps, you should be able to successfully install the
 package which threw the error above.</p>
+<p>This workshop has other dependencies, which you can install using the following
+linked script:</p>
+<ul>
+<li><a href="https://github.com/tlverse/gates2019-workshop/blob/master/install.R">install.R</a></li>
+</ul>
 
 </div>
 </div>
@@ -400,15 +405,14 @@ package which threw the error above.</p>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": {
-"github": true,
 "facebook": false,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"],
+"github": true
 },
 "fontsettings": {
 "theme": "white",
