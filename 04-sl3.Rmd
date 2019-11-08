@@ -7,6 +7,75 @@ Coyle, Nima Hejazi, Ivana Malenica, and Oleg Sofrygin_.
 
 Updated: `r Sys.Date()`
 
+### Super Learning
+
+- There is no universally optimal machine learning algorithm for density
+  estimation or prediction.
+- When we have tested different algorithms on actual
+  data and looked at the performance (e.g., MSE of prediction), never does one
+  algorithm always win (see below).
+- For some data, one needs learners that can model a complex function.
+- For others, typically the result of noise or insufficient sample size, a
+  simple, parametric model might fit best.
+- Super Learner, an ensemble learner, solves this issue, by allowing a convex
+  combination of learners from the simplest (intercept-only) to most complex
+  (neural nets, random forests, SVM, etc).
+- It works by using cross-validation in a manner which guarantees that the
+  resulting fit will be as good as possible, given the learners provided (note,
+  even a convex combination of poor learners can sometimes result in good fit,
+  though better to have good candidates).
+
+```{r cv_fig, fig.show="hold"}
+knitr::include_graphics("img/misc/vs.pdf")
+```
+
+The figure above shows an example of 10-fold cross-validation.
+
+The schematic below is a visualization of the following algorithm:
+
+- Break up the sample evenly into V-folds (say V=10).
+- For each of these 10 folds, remove that portion of the sample (kept out as
+  validation sample) and the remaining will be used to fit learners (training
+  sample).
+- Fit each learner on the training sample (note, some learners will have their
+  own internal cross-validation procedure or other methods to select tuning
+  parameters).
+- For each observation in the corresponding training sample, predict the outcome
+  using each of the learners, so if there are $p$ learners, then where would be
+  $p$ predictions on each of the observations in validation sample).
+- Take out another validation sample and repeat until each of the V-sets of data
+  are removed.
+- Compare the cross-validated fit of the learners across all observations based
+  on specified loss function (e.g., squared error, negative log-likelihood, ...)
+  by calculating the corresponding average loss (risk).
+- Either:
+
+  + choose the learner with smallest risk and apply that learner to entire data
+    set (resulting SL fit),
+  + do a weighted average of the learners to minimize the cross-validated risk
+    (construct an ensemble of learners), by
+
+    + re-fitting the learners on the original data set, and
+    + use the weights above to get the file SL fit.
+
+Note, this entire procedure can be itself cross-validated to get a consistent
+estimate of the future performance of the SL fit.
+
+```{r cv_fig2, fig.show="hold"}
+knitr::include_graphics("img/misc/SLKaiserNew.pdf")
+```
+
+For prediction, one can use the cross-validated risk to empirically determine
+the relative performance of SL and competing methods.  Below shows the results
+of such a study, comparing the fits of several different learners, including the
+SL algorithms.
+
+```{r cv_fig3, fig.show="hold"}
+knitr::include_graphics("img/misc/ericSL.pdf")
+```
+
+---
+
 ## Learning Objectives
 By the end of this lesson you will be able to:
 
@@ -256,7 +325,8 @@ plot(dt_sl, color = FALSE, height = "400px", width = "100%")
 
 ### 3. Train the super learner on the machine learning task {-}
 
-Now we are ready to **"train"** our super learner on our `sl3_task` object, `washb_task`.
+Now we are ready to **"train"** our super learner on our `sl3_task` object,
+`washb_task`.
 
 ```{r sl-basic}
 sl_fit <- sl$train(washb_task)
@@ -328,8 +398,8 @@ washb_varimp %>%
 ### Predicting Myocardial Infarction with `sl3`
 
 Follow the steps below to predict myocardial infarction (`mi`) using the
-available covariate data. Thanks to Professor David Benkeser at Emory University
-for making the this Cardiovascular Health Study (CHS) data accessible.
+available covariate data. We thank Prof. David Benkeser at Emory University for
+making the this Cardiovascular Health Study (CHS) data accessible.
 
 Work with a buddy/team. You have 20 minutes.
 
