@@ -6,6 +6,16 @@ Based on the [`tmle3` `R` package](https://github.com/tlverse/tmle3).
 
 Updated: `r Sys.Date()`
 
+## Introduction
+
+The first step in the estimation procedure is an initial estimate of the
+data-generating distribution, or the relevant part of this distribution that is
+needed to evaluate the target parameter. For this initial estimation, we use the
+super learner [@vdl2007super], as described in the previous section. 
+
+With the initial estimate of relevent parts of the data-generating distribution
+necessary to evaluate the target parameter, we are ready to construct the TMLE!
+
 ### Substitution Estimators
 
 - Beyond a fit of the prediction function, one might also want to estimate more
