@@ -1,5 +1,5 @@
-Package: pitt2019workshop
-Title: Targeted Learning Workshop at the University of Pittsburgh 2019
+Package: gates2019workshop
+Title: Targeted Learning Workshop at the Gates Foundation 2019
 Version: 0.0.1
 Imports:
   bookdown,
@@ -53,5 +53,5 @@ Remotes:
   github::tlverse/tmle3mopttx@5ba5f65,
   github::tlverse/tmle3shift@master,
   github::nhejazi/haldensify@master
-URL: https://github.com/tlverse/pitt2019-workshop
-BugReports: https://github.com/tlverse/pitt2019-workshop/issues
+URL: https://github.com/tlverse/gates2019-workshop
+BugReports: https://github.com/tlverse/gates2019-workshop/issues
