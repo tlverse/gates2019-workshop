@@ -28,12 +28,12 @@ estimator.
 - For some data, one needs learners that can model a complex function.
 - For others, possibly as a result of noise or insufficient sample size, a
   simple, parametric model might fit best.
-- Super Learner, an ensemble learner, solves this issue, by allowing a convex
+- Super Learner, an ensemble learner, solves this issue, by allowing a
   combination of learners from the simplest (intercept-only) to most complex
   (neural nets, random forests, SVM, etc).
 - It works by using cross-validation in a manner which guarantees that the
   resulting fit will be as good as possible, given the learners provided.
-- Note: even a convex combination of poor learners can sometimes result in good fit.
+- Note: even a combination of poor learners can sometimes result in good fit.
   It is very important to have good candidates in our library, possibly
   incorporating known knowledge about the system in question.
   
@@ -139,7 +139,7 @@ knitr::include_graphics("img/misc/ericSL.pdf")
 * The *discrete super learner*, or cross-validated selector, is the algorithm in
   the library that minimizes the V-fold cross-validated empirical risk.
 
-* The *continuous super learner* is a weighted average of the library of
+* The *super learner* is a weighted average of the library of
   algorithms, where the weights are chosen to minimize the V-fold
   cross-validated empirical risk of the library. Restricting the weights
   ("metalearner" in `sl3` nomenclature) to be positive and sum to one (convex
@@ -393,7 +393,7 @@ the super learner.
 This estimation procedure requires an "external" layer of cross-validation,
 also called nested cross-validation, which involves setting aside a separate
 holdout sample that we don’t use to fit the super learner. This
-external cross validation procedure may also incorporate 10 folds, which is the
+external cross-validation procedure may also incorporate 10 folds, which is the
 default in `sl3`. However, we will incorporate 2 outer/external folds of
 cross-validation for computational efficiency.
 
@@ -448,7 +448,7 @@ answers to the following questions.
 
 1. Which learner was the discrete super learner? What was the cross validated
 mean risk of the discrete super learner?
-2. What was the cross validated risk of the continuous super learner?
+2. What was the cross-validated risk of the continuous super learner?
 3. Did your group face any challenges?
 4. Any additional comments/questions about this `sl3` section of the workshop?
 
@@ -477,8 +477,8 @@ head(chspred) %>%
 6. Print your super learner fit by calling `print()` with `$`.
 7. Cross-validate your super learner fit to see how well it performs on unseen
    data. Specify `loss_squared_error` as the loss function to evaluate the
-   super learner. Like above, create a new task with 2 folds of external cross
-   validation for computational efficiency.
+   super learner. Like above, create a new task with 2 folds of external 
+   cross-validation for computational efficiency.
 
 ## Summary
 
