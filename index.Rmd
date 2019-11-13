@@ -71,7 +71,7 @@ using the [`tlverse` software ecosystem](https://github.com/tlverse), given at
 the Gates Foundation on 13 November 2019. [*The Hitchhiker's Guide to
 the `tlverse`, or a Targeted Learning Practitioner's
 Handbook*](https://tlverse.org/tlverse-handbook/) is an in-draft book covering
-the same topics in greater detail and may serve as a useful accompanying
+more topics in greater detail and may serve as a useful accompanying
 resource to these workshop materials.
 
 ## Important links {-}
@@ -92,23 +92,21 @@ repository for the short course.
 
 This half-day workshop will provide an introduction to the field of
 targeted learning and the corresponding [`tlverse` software
-ecosystem](https://github.com/tlverse). In particular, we will focus on
-targeted minimum loss estimators of causal effects, including those of static
-and dynamic treatments (as well as those of optimal dynamic and stochastic
-interventions, time permitting). These multiply robust, efficient plug-in
-estimators use state-of-the-art, ensemble machine learning tools to flexibly
-adjust for confounding while yielding valid statistical inference. We will
-discuss the utility of this robust estimation strategy in comparison to
-conventional techniques, which often rely on restrictive statistical models and
-may therefore lead to severely biased inference. In addition to discussion, this
-workshop will incorporate both interactive activities and hands-on, guided `R`
-programming exercises, to allow participants the opportunity to familiarize
-themselves with methodology and tools that will translate to real-world causal
-inference analyses. It is highly recommended for participants to have an
-understanding of basic statistical concepts such as confounding, probability
-distributions, confidence intervals, hypothesis tests, and regression. Advanced
-knowledge of mathematical statistics may be useful but is not necessary.
-Familiarity with the `R` programming language will be essential.
+ecosystem](https://github.com/tlverse). We will provide a gentle introduction to
+targeted minimum loss estimators of causal effects. These multiply robust, 
+efficient plug-in estimators use state-of-the-art, ensemble machine learning 
+tools to flexibly adjust for confounding while yielding valid statistical 
+inference. We will discuss the utility of this robust estimation strategy in 
+comparison to conventional techniques, which often rely on restrictive 
+statistical models and may therefore lead to severely biased inference. In 
+addition to discussion, this workshop will incorporate hands-on, guided `R` 
+programming tutorials using the `tlverse`, to allow participants the opportunity 
+to familiarize themselves with methodology and tools that will translate to 
+real-world statistical analyses. It is highly recommended for participants to 
+have an understanding of basic statistical concepts such as confounding, 
+probability distributions, confidence intervals, hypothesis tests, and 
+regression. Advanced knowledge of mathematical statistics may be useful but is 
+not necessary. Familiarity with the `R` programming language will be essential.
 
 ## Outline {-}
 
@@ -116,13 +114,11 @@ Topics covered in this workshop will include
 
 * Introduction to the [`tlverse` software
     ecosystem](https://tlverse.org)
-* The Roadmap of Targeted Learning, and the [WASH
+* Overview of the [WASH
     Benefits](http://www.washbenefits.net/) data
-* [Why we need a statistical
-    revolution](https://senseaboutscienceusa.org/super-learning-and-the-revolution-in-knowledge/)
 * Ensemble machine learning with the
     [`sl3`](https://github.com/tlverse/sl3) `R` package
-* Targeted learning for causal inference with the
+* Targeted learning for the average treatment effect with the
     [`tmle3`](https://github.com/tlverse/tmle3) `R` package
 
 ## About the instructors and authors {-}
