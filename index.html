@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Targeted Learning with the tlverse Software Ecosystem</title>
   <meta name="description" content="An open-source and fully-reproducible electronic set of teaching materials accompanying an invited short-course on applying Targeted Learning using the tlverse software ecosystem." />
-  <meta name="generator" content="bookdown 0.14.1 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.15.1 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Targeted Learning with the tlverse Software Ecosystem" />
   <meta property="og:type" content="book" />
@@ -246,7 +246,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1 class="title">Targeted Learning with the <code>tlverse</code> Software Ecosystem</h1>
 <h2 class="subtitle"><em>Workshop, 13 November 2019, Gates Foundation</em></h2>
 <p class="author"><em>Mark van der Laan, Alan Hubbard, Jeremy Coyle, Nima Hejazi, Ivana Malenica, Rachael Phillips</em></p>
-<p class="date"><em>updated: November 11, 2019</em></p>
+<p class="date"><em>updated: November 13, 2019</em></p>
 </div>
 <div id="preface" class="section level1 unnumbered">
 <h1>Preface</h1>
@@ -264,7 +264,7 @@ using the <a href="https://github.com/tlverse"><code>tlverse</code> software eco
 the Gates Foundation on 13 November 2019. <a href="https://tlverse.org/tlverse-handbook/"><em>The Hitchhiker’s Guide to
 the <code>tlverse</code>, or a Targeted Learning Practitioner’s
 Handbook</em></a> is an in-draft book covering
-the same topics in greater detail and may serve as a useful accompanying
+more topics in greater detail and may serve as a useful accompanying
 resource to these workshop materials.</p>
 <div id="important-links" class="section level2 unnumbered">
 <h2>Important links</h2>
@@ -285,23 +285,21 @@ repository for the short course.</p>
 <h2>About this workshop</h2>
 <p>This half-day workshop will provide an introduction to the field of
 targeted learning and the corresponding <a href="https://github.com/tlverse"><code>tlverse</code> software
-ecosystem</a>. In particular, we will focus on
-targeted minimum loss estimators of causal effects, including those of static
-and dynamic treatments (as well as those of optimal dynamic and stochastic
-interventions, time permitting). These multiply robust, efficient plug-in
-estimators use state-of-the-art, ensemble machine learning tools to flexibly
-adjust for confounding while yielding valid statistical inference. We will
-discuss the utility of this robust estimation strategy in comparison to
-conventional techniques, which often rely on restrictive statistical models and
-may therefore lead to severely biased inference. In addition to discussion, this
-workshop will incorporate both interactive activities and hands-on, guided <code>R</code>
-programming exercises, to allow participants the opportunity to familiarize
-themselves with methodology and tools that will translate to real-world causal
-inference analyses. It is highly recommended for participants to have an
-understanding of basic statistical concepts such as confounding, probability
-distributions, confidence intervals, hypothesis tests, and regression. Advanced
-knowledge of mathematical statistics may be useful but is not necessary.
-Familiarity with the <code>R</code> programming language will be essential.</p>
+ecosystem</a>. We will provide a gentle introduction to
+targeted minimum loss estimators of causal effects. These multiply robust,
+efficient plug-in estimators use state-of-the-art, ensemble machine learning
+tools to flexibly adjust for confounding while yielding valid statistical
+inference. We will discuss the utility of this robust estimation strategy in
+comparison to conventional techniques, which often rely on restrictive
+statistical models and may therefore lead to severely biased inference. In
+addition to discussion, this workshop will incorporate hands-on, guided <code>R</code>
+programming tutorials using the <code>tlverse</code>, to allow participants the opportunity
+to familiarize themselves with methodology and tools that will translate to
+real-world statistical analyses. It is highly recommended for participants to
+have an understanding of basic statistical concepts such as confounding,
+probability distributions, confidence intervals, hypothesis tests, and
+regression. Advanced knowledge of mathematical statistics may be useful but is
+not necessary. Familiarity with the <code>R</code> programming language will be essential.</p>
 </div>
 <div id="outline" class="section level2 unnumbered">
 <h2>Outline</h2>
@@ -309,13 +307,11 @@ Familiarity with the <code>R</code> programming language will be essential.</p>
 <ul>
 <li>Introduction to the <a href="https://tlverse.org"><code>tlverse</code> software
 ecosystem</a></li>
-<li>The Roadmap of Targeted Learning, and the <a href="http://www.washbenefits.net/">WASH
+<li>Overview of the <a href="http://www.washbenefits.net/">WASH
 Benefits</a> data</li>
-<li><a href="https://senseaboutscienceusa.org/super-learning-and-the-revolution-in-knowledge/">Why we need a statistical
-revolution</a></li>
 <li>Ensemble machine learning with the
 <a href="https://github.com/tlverse/sl3"><code>sl3</code></a> <code>R</code> package</li>
-<li>Targeted learning for causal inference with the
+<li>Targeted learning for the average treatment effect with the
 <a href="https://github.com/tlverse/tmle3"><code>tmle3</code></a> <code>R</code> package</li>
 </ul>
 </div>
