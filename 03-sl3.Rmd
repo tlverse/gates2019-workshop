@@ -1,4 +1,4 @@
-# Ensemble Machine Learning
+# Super (Ensemble Machine) Learning
 
 _Ivana Malenica_ and _Rachael Phillips_
 
@@ -79,7 +79,7 @@ knitr::include_graphics("img/misc/vs.pdf")
 Note, this entire procedure can be itself cross-validated to get a consistent
 estimate of the future performance of the SL fit.
 
-```{r cv_fig2, fig.show="hold"}
+```{r cv_fig2, fig.show="hold", echo = FALSE}
 knitr::include_graphics("img/misc/SLKaiserNew.pdf")
 ``` 
 
@@ -113,7 +113,7 @@ knitr::include_graphics("img/misc/SLKaiserNew.pdf")
 - Below shows the results of such a study, comparing the fits of several different learners, 
   including the SL algorithms.
 
-```{r cv_fig3, fig.show="hold"}
+```{r cv_fig3, fig.show="hold", echo = FALSE}
 knitr::include_graphics("img/misc/ericSL.pdf")
 ```
 
