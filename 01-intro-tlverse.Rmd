@@ -1,5 +1,7 @@
 # Welcome to the `tlverse` {#tlverse}
 
+_Jeremy Coyle_
+
 ## Learning Objectives
 
 1. Understand the `tlverse` ecosystem conceptually

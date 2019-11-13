@@ -171,7 +171,7 @@ By the end of this lesson you will be able to:
 7. Rationalize the need to remove bias from the super learner to make an optimal
    bias-variance tradeoff for the parameter of interest.
 
-## Basic `sl3` Implementation
+## Streamlined `sl3` Implementation
 
 We begin by illustrating the core functionality of the super learner algorithm
 as implemented in `sl3`.
@@ -362,7 +362,12 @@ sl <- make_learner(Lrnr_sl,
 dt_sl <- delayed_learner_train(sl, washb_task)
 plot(dt_sl, color = FALSE, height = "400px", width = "100%")
 ```
-
+<!--
+We can also use `Lrnr_cv` to build a super learner, cross-validate a stack of 
+learners to compare performance of the learners in the stack, or cross-validate
+any single learner (see "Cross-validation" section of this [`sl3` 
+introductory tutorial](https://tlverse.org/sl3/articles/intro_sl3.html)).
+-->
 ### 3. Train the super learner on the machine learning task {-}
 
 Now we are ready to **"train"** our super learner on our `sl3_task` object,

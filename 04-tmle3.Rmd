@@ -1,6 +1,6 @@
 # The TMLE Framework
 
-_Jeremy Coyle_
+_Mark van der Laan_ and _Nima Hejazi_
 
 Based on the [`tmle3` `R` package](https://github.com/tlverse/tmle3).
 
@@ -77,7 +77,7 @@ above):
 - Thus, every effort is made to achieve minimal bias and the asymptotic
   semi-parametric efficiency bound for the variance.
 
-```{r cv_fig4, fig.show="hold"}
+```{r cv_fig4, fig.show="hold", echo = FALSE}
 knitr::include_graphics("img/misc/TMLEimage.pdf")
 ```
 
