@@ -277,7 +277,6 @@ incorporating known knowledge about the system in question.</li>
 study designs and data structures.</li>
 <li>The figure below shows an example of 10-fold cross-validation.</li>
 </ul>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;img/misc/vs.pdf&quot;</span>)</a></code></pre></div>
 <embed src="img/misc/vs.pdf" width="    extwidth" style="display: block; margin: auto;" type="application/pdf" />
 <p><strong>General step-by-step overview of the Super Learner algorithm:</strong></p>
 <ul>
@@ -331,7 +330,7 @@ set of covariates.</li>
 <li>This function can be expressed as the minimizer of the expected loss:
 <span class="math inline">\(\psi_0(W) = \text{argmin}_{\psi} E[L(X,\psi(W))]\)</span>.</li>
 <li>Here, the loss function is represented as <span class="math inline">\(L\)</span> (e.g., squared error loss,
-<span class="math inline">\(L: (Y-\psi(W)))\)</span>).</li>
+<span class="math inline">\(L: (Y-\psi(W))^2)\)</span>).</li>
 </ul>
 </div>
 <div id="why-use-the-super-learner" class="section level4">
@@ -421,26 +420,26 @@ as implemented in <code>sl3</code>.</p>
 </div>
 <div id="load-the-necessary-libraries-and-data" class="section level3 unnumbered">
 <h3>0. Load the necessary libraries and data</h3>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">library</span>(kableExtra)</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="kw">library</span>(knitr)</a>
-<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="kw">library</span>(skimr)</a>
-<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb8-5" data-line-number="5"><span class="kw">library</span>(data.table)</a>
-<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="kw">library</span>(sl3)</a>
-<a class="sourceLine" id="cb8-7" data-line-number="7"><span class="kw">library</span>(SuperLearner)</a>
-<a class="sourceLine" id="cb8-8" data-line-number="8"><span class="kw">library</span>(origami)</a>
-<a class="sourceLine" id="cb8-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb8-10" data-line-number="10"><span class="kw">set.seed</span>(<span class="dv">7194</span>)</a>
-<a class="sourceLine" id="cb8-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb8-12" data-line-number="12"><span class="co"># load data set and take a peek</span></a>
-<a class="sourceLine" id="cb8-13" data-line-number="13">washb_data &lt;-<span class="st"> </span><span class="kw">fread</span>(<span class="st">&quot;https://raw.githubusercontent.com/tlverse/tlverse-data/master/wash-benefits/washb_data.csv&quot;</span>,</a>
-<a class="sourceLine" id="cb8-14" data-line-number="14">  <span class="dt">stringsAsFactors =</span> <span class="ot">TRUE</span></a>
-<a class="sourceLine" id="cb8-15" data-line-number="15">)</a>
-<a class="sourceLine" id="cb8-16" data-line-number="16"></a>
-<a class="sourceLine" id="cb8-17" data-line-number="17"><span class="kw">head</span>(washb_data) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb8-18" data-line-number="18"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">digits =</span> <span class="dv">4</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb8-19" data-line-number="19"><span class="st">  </span><span class="kw">kable_styling</span>(<span class="dt">fixed_thead =</span> T, <span class="dt">font_size =</span> <span class="dv">10</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb8-20" data-line-number="20"><span class="st">  </span><span class="kw">scroll_box</span>(<span class="dt">width =</span> <span class="st">&quot;100%&quot;</span>, <span class="dt">height =</span> <span class="st">&quot;250px&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">library</span>(kableExtra)</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="kw">library</span>(knitr)</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="kw">library</span>(skimr)</a>
+<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb7-5" data-line-number="5"><span class="kw">library</span>(data.table)</a>
+<a class="sourceLine" id="cb7-6" data-line-number="6"><span class="kw">library</span>(sl3)</a>
+<a class="sourceLine" id="cb7-7" data-line-number="7"><span class="kw">library</span>(SuperLearner)</a>
+<a class="sourceLine" id="cb7-8" data-line-number="8"><span class="kw">library</span>(origami)</a>
+<a class="sourceLine" id="cb7-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb7-10" data-line-number="10"><span class="kw">set.seed</span>(<span class="dv">7194</span>)</a>
+<a class="sourceLine" id="cb7-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb7-12" data-line-number="12"><span class="co"># load data set and take a peek</span></a>
+<a class="sourceLine" id="cb7-13" data-line-number="13">washb_data &lt;-<span class="st"> </span><span class="kw">fread</span>(<span class="st">&quot;https://raw.githubusercontent.com/tlverse/tlverse-data/master/wash-benefits/washb_data.csv&quot;</span>,</a>
+<a class="sourceLine" id="cb7-14" data-line-number="14">  <span class="dt">stringsAsFactors =</span> <span class="ot">TRUE</span></a>
+<a class="sourceLine" id="cb7-15" data-line-number="15">)</a>
+<a class="sourceLine" id="cb7-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb7-17" data-line-number="17"><span class="kw">head</span>(washb_data) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb7-18" data-line-number="18"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">digits =</span> <span class="dv">4</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb7-19" data-line-number="19"><span class="st">  </span><span class="kw">kable_styling</span>(<span class="dt">fixed_thead =</span> T, <span class="dt">font_size =</span> <span class="dv">10</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb7-20" data-line-number="20"><span class="st">  </span><span class="kw">scroll_box</span>(<span class="dt">width =</span> <span class="st">&quot;100%&quot;</span>, <span class="dt">height =</span> <span class="st">&quot;250px&quot;</span>)</a></code></pre></div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:250px; overflow-x: scroll; width:100%; ">
 <table class="table" style="font-size: 10px; margin-left: auto; margin-right: auto;">
 <thead>
@@ -1060,20 +1059,20 @@ object.</p>
 <p>The <code>sl3_Task</code> keeps track of the roles the variables play in the
 machine learning problem, the data, and any metadata (e.g., observational-level
 weights, id, offset).</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co"># specify the outcome and covariates</span></a>
-<a class="sourceLine" id="cb9-2" data-line-number="2">outcome &lt;-<span class="st"> &quot;whz&quot;</span></a>
-<a class="sourceLine" id="cb9-3" data-line-number="3">covars &lt;-<span class="st"> </span><span class="kw">colnames</span>(washb_data)[<span class="op">-</span><span class="kw">which</span>(<span class="kw">names</span>(washb_data) <span class="op">==</span><span class="st"> </span>outcome)]</a>
-<a class="sourceLine" id="cb9-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb9-5" data-line-number="5"><span class="co"># create the sl3 task</span></a>
-<a class="sourceLine" id="cb9-6" data-line-number="6">washb_task &lt;-<span class="st"> </span><span class="kw">make_sl3_Task</span>(</a>
-<a class="sourceLine" id="cb9-7" data-line-number="7">  <span class="dt">data =</span> washb_data,</a>
-<a class="sourceLine" id="cb9-8" data-line-number="8">  <span class="dt">covariates =</span> covars,</a>
-<a class="sourceLine" id="cb9-9" data-line-number="9">  <span class="dt">outcome =</span> outcome</a>
-<a class="sourceLine" id="cb9-10" data-line-number="10">)</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="co"># specify the outcome and covariates</span></a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">outcome &lt;-<span class="st"> &quot;whz&quot;</span></a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">covars &lt;-<span class="st"> </span><span class="kw">colnames</span>(washb_data)[<span class="op">-</span><span class="kw">which</span>(<span class="kw">names</span>(washb_data) <span class="op">==</span><span class="st"> </span>outcome)]</a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb8-5" data-line-number="5"><span class="co"># create the sl3 task</span></a>
+<a class="sourceLine" id="cb8-6" data-line-number="6">washb_task &lt;-<span class="st"> </span><span class="kw">make_sl3_Task</span>(</a>
+<a class="sourceLine" id="cb8-7" data-line-number="7">  <span class="dt">data =</span> washb_data,</a>
+<a class="sourceLine" id="cb8-8" data-line-number="8">  <span class="dt">covariates =</span> covars,</a>
+<a class="sourceLine" id="cb8-9" data-line-number="9">  <span class="dt">outcome =</span> outcome</a>
+<a class="sourceLine" id="cb8-10" data-line-number="10">)</a></code></pre></div>
 <pre><code>Warning in .subset2(public_bind_env, &quot;initialize&quot;)(...): Missing Covariate Data
 Found. Imputing covariates using sl3_process_missing.</code></pre>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="co"># examine the task</span></a>
-<a class="sourceLine" id="cb11-2" data-line-number="2">washb_task</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="co"># examine the task</span></a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">washb_task</a></code></pre></div>
 <pre><code>A sl3 Task with 4695 obs and these nodes:
 $covariates
  [1] &quot;tr&quot;              &quot;fracode&quot;         &quot;month&quot;           &quot;aged&quot;           
@@ -1114,14 +1113,14 @@ might be consistent with the true data-generating distribution.</li>
 <p>Learners have properties that indicate what features they support. We may use
 <code>sl3_list_properties()</code> to get a list of all properties supported by at least
 one learner.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">sl3_list_properties</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">sl3_list_properties</span>()</a></code></pre></div>
 <pre><code> [1] &quot;binomial&quot;             &quot;categorical&quot;          &quot;continuous&quot;          
  [4] &quot;cv&quot;                   &quot;density&quot;              &quot;ids&quot;                 
  [7] &quot;multivariate_outcome&quot; &quot;offset&quot;               &quot;preprocessing&quot;       
 [10] &quot;timeseries&quot;           &quot;weights&quot;              &quot;wrapper&quot;             </code></pre>
 <p>Since we have a continuous outcome, we may identify the learners that support
 this outcome type with <code>sl3_list_learners()</code>.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw">sl3_list_learners</span>(<span class="kw">c</span>(<span class="st">&quot;continuous&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">sl3_list_learners</span>(<span class="kw">c</span>(<span class="st">&quot;continuous&quot;</span>))</a></code></pre></div>
 <pre><code> [1] &quot;Lrnr_arima&quot;                     &quot;Lrnr_bartMachine&quot;              
  [3] &quot;Lrnr_bilstm&quot;                    &quot;Lrnr_caret&quot;                    
  [5] &quot;Lrnr_condensier&quot;                &quot;Lrnr_dbarts&quot;                   
@@ -1142,41 +1141,41 @@ this outcome type with <code>sl3_list_learners()</code>.</p>
 [35] &quot;Lrnr_xgboost&quot;                  </code></pre>
 <p>Now that we have an idea of some learners, we can construct them using the
 <code>make_learner</code> function.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="co"># choose base learners</span></a>
-<a class="sourceLine" id="cb17-2" data-line-number="2">lrnr_glm &lt;-<span class="st"> </span><span class="kw">make_learner</span>(Lrnr_glm)</a>
-<a class="sourceLine" id="cb17-3" data-line-number="3">lrnr_mean &lt;-<span class="st"> </span><span class="kw">make_learner</span>(Lrnr_mean)</a>
-<a class="sourceLine" id="cb17-4" data-line-number="4">lrnr_glmnet &lt;-<span class="st"> </span><span class="kw">make_learner</span>(Lrnr_glmnet)</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="co"># choose base learners</span></a>
+<a class="sourceLine" id="cb16-2" data-line-number="2">lrnr_glm &lt;-<span class="st"> </span><span class="kw">make_learner</span>(Lrnr_glm)</a>
+<a class="sourceLine" id="cb16-3" data-line-number="3">lrnr_mean &lt;-<span class="st"> </span><span class="kw">make_learner</span>(Lrnr_mean)</a>
+<a class="sourceLine" id="cb16-4" data-line-number="4">lrnr_glmnet &lt;-<span class="st"> </span><span class="kw">make_learner</span>(Lrnr_glmnet)</a></code></pre></div>
 <p>We can customize learner hyperparameters to incorporate a diversity of different
 settings.</p>
 <p>Documentation for the learners and their hyperparameters can be found
 in the <a href="https://tlverse.org/sl3/reference/index.html#section-sl-learners"><code>sl3</code> Learners
 Reference</a>.</p>
 <p>We can also include learners from the <code>SuperLearner</code> <code>R</code> package.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">lrnr_ranger100 &lt;-<span class="st"> </span><span class="kw">make_learner</span>(Lrnr_ranger, <span class="dt">num.trees =</span> <span class="dv">100</span>)</a>
-<a class="sourceLine" id="cb18-2" data-line-number="2">lrnr_hal_simple &lt;-<span class="st"> </span><span class="kw">make_learner</span>(Lrnr_hal9001, <span class="dt">degrees =</span> <span class="dv">1</span>, <span class="dt">n_folds =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb18-3" data-line-number="3">lrnr_gam &lt;-<span class="st"> </span>Lrnr_pkg_SuperLearner<span class="op">$</span><span class="kw">new</span>(<span class="st">&quot;SL.gam&quot;</span>)</a>
-<a class="sourceLine" id="cb18-4" data-line-number="4">lrnr_bayesglm &lt;-<span class="st"> </span>Lrnr_pkg_SuperLearner<span class="op">$</span><span class="kw">new</span>(<span class="st">&quot;SL.bayesglm&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">lrnr_ranger100 &lt;-<span class="st"> </span><span class="kw">make_learner</span>(Lrnr_ranger, <span class="dt">num.trees =</span> <span class="dv">100</span>)</a>
+<a class="sourceLine" id="cb17-2" data-line-number="2">lrnr_hal_simple &lt;-<span class="st"> </span><span class="kw">make_learner</span>(Lrnr_hal9001, <span class="dt">degrees =</span> <span class="dv">1</span>, <span class="dt">n_folds =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb17-3" data-line-number="3">lrnr_gam &lt;-<span class="st"> </span>Lrnr_pkg_SuperLearner<span class="op">$</span><span class="kw">new</span>(<span class="st">&quot;SL.gam&quot;</span>)</a>
+<a class="sourceLine" id="cb17-4" data-line-number="4">lrnr_bayesglm &lt;-<span class="st"> </span>Lrnr_pkg_SuperLearner<span class="op">$</span><span class="kw">new</span>(<span class="st">&quot;SL.bayesglm&quot;</span>)</a></code></pre></div>
 <p>In order to assemble the library of learners, we need to <strong>“stack”</strong> them
 together.</p>
 <p>A <code>Stack</code> is a special learner and it has the same interface as all
 other learners. What makes a stack special is that it combines multiple learners
 by training them simultaneously, so that their predictions can be either
 combined or compared.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">stack &lt;-<span class="st"> </span><span class="kw">make_learner</span>(</a>
-<a class="sourceLine" id="cb19-2" data-line-number="2">  Stack,</a>
-<a class="sourceLine" id="cb19-3" data-line-number="3">  lrnr_glm, lrnr_mean, lrnr_ranger100, lrnr_glmnet,</a>
-<a class="sourceLine" id="cb19-4" data-line-number="4">  lrnr_gam, lrnr_bayesglm</a>
-<a class="sourceLine" id="cb19-5" data-line-number="5">)</a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">stack &lt;-<span class="st"> </span><span class="kw">make_learner</span>(</a>
+<a class="sourceLine" id="cb18-2" data-line-number="2">  Stack,</a>
+<a class="sourceLine" id="cb18-3" data-line-number="3">  lrnr_glm, lrnr_mean, lrnr_ranger100, lrnr_glmnet,</a>
+<a class="sourceLine" id="cb18-4" data-line-number="4">  lrnr_gam, lrnr_bayesglm</a>
+<a class="sourceLine" id="cb18-5" data-line-number="5">)</a></code></pre></div>
 <p>We will fit a non-negative least squares metalearner using <code>Lrnr_nnls</code>. Note
 that any learner can be used as a metalearner.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">metalearner &lt;-<span class="st"> </span><span class="kw">make_learner</span>(Lrnr_nnls)</a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">metalearner &lt;-<span class="st"> </span><span class="kw">make_learner</span>(Lrnr_nnls)</a></code></pre></div>
 <p>We can optionally select a subset of available covariates and pass only
 those variables to the modeling algorithm.</p>
 <p>Let’s consider screening covariates based on their correlation with our outcome
 of interest (<code>cor.test</code> p-value <span class="math inline">\(\leq 0.1\)</span>).</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">screen_cor &lt;-<span class="st"> </span>Lrnr_pkg_SuperLearner_screener<span class="op">$</span><span class="kw">new</span>(<span class="st">&quot;screen.corP&quot;</span>)</a>
-<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="co"># which covariates are selected on the full data?</span></a>
-<a class="sourceLine" id="cb21-3" data-line-number="3">screen_cor<span class="op">$</span><span class="kw">train</span>(washb_task)</a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">screen_cor &lt;-<span class="st"> </span>Lrnr_pkg_SuperLearner_screener<span class="op">$</span><span class="kw">new</span>(<span class="st">&quot;screen.corP&quot;</span>)</a>
+<a class="sourceLine" id="cb20-2" data-line-number="2"><span class="co"># which covariates are selected on the full data?</span></a>
+<a class="sourceLine" id="cb20-3" data-line-number="3">screen_cor<span class="op">$</span><span class="kw">train</span>(washb_task)</a></code></pre></div>
 <pre><code>Warning: `lang_tail()` is deprecated as of rlang 0.2.0.
 This warning is displayed once per session.</code></pre>
 <pre><code>Warning: `mut_node_cdr()` is deprecated as of rlang 0.2.0.
@@ -1192,31 +1191,31 @@ $selected
 <p>To <strong>“pipe”</strong> only the selected covariates to the modeling algorithm, we need to
 make a <code>Pipeline</code>, which is a just set of learners to be fit sequentially, where
 the fit from one learner is used to define the task for the next learner.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">cor_pipeline &lt;-<span class="st"> </span><span class="kw">make_learner</span>(Pipeline, screen_cor, stack)</a></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">cor_pipeline &lt;-<span class="st"> </span><span class="kw">make_learner</span>(Pipeline, screen_cor, stack)</a></code></pre></div>
 <p>Now our learners will be preceded by a screening step.</p>
 <p>We also consider the original <code>stack</code>, just to compare how the feature selection
 methods perform in comparison to the methods without feature selection.</p>
 <p>Analogous to what we have seen before, we have to stack the pipeline and
 original <code>stack</code> together, so we may use them as base learners in our super
 learner.</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1">fancy_stack &lt;-<span class="st"> </span><span class="kw">make_learner</span>(Stack, cor_pipeline, stack)</a>
-<a class="sourceLine" id="cb26-2" data-line-number="2"><span class="co"># we can visualize the stack</span></a>
-<a class="sourceLine" id="cb26-3" data-line-number="3">dt_stack &lt;-<span class="st"> </span><span class="kw">delayed_learner_train</span>(fancy_stack, washb_task)</a>
-<a class="sourceLine" id="cb26-4" data-line-number="4"><span class="kw">plot</span>(dt_stack, <span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">height =</span> <span class="st">&quot;400px&quot;</span>, <span class="dt">width =</span> <span class="st">&quot;100%&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">fancy_stack &lt;-<span class="st"> </span><span class="kw">make_learner</span>(Stack, cor_pipeline, stack)</a>
+<a class="sourceLine" id="cb25-2" data-line-number="2"><span class="co"># we can visualize the stack</span></a>
+<a class="sourceLine" id="cb25-3" data-line-number="3">dt_stack &lt;-<span class="st"> </span><span class="kw">delayed_learner_train</span>(fancy_stack, washb_task)</a>
+<a class="sourceLine" id="cb25-4" data-line-number="4"><span class="kw">plot</span>(dt_stack, <span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">height =</span> <span class="st">&quot;400px&quot;</span>, <span class="dt">width =</span> <span class="st">&quot;100%&quot;</span>)</a></code></pre></div>
 <div id="htmlwidget-ac63700e2efbcefb9700" style="width:100%;height:400px;" class="visNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-ac63700e2efbcefb9700">{"x":{"nodes":{"id":["847f8e80-05c9-11ea-818a-42010a140053","847f7936-05c9-11ea-818a-42010a140053","847ebb90-05c9-11ea-818a-42010a140053","847ea84e-05c9-11ea-818a-42010a140053","847d2640-05c9-11ea-818a-42010a140053","847e7f9a-05c9-11ea-818a-42010a140053","847d5476-05c9-11ea-818a-42010a140053","847e69ba-05c9-11ea-818a-42010a140053","847d7d34-05c9-11ea-818a-42010a140053","847da700-05c9-11ea-818a-42010a140053","847dd004-05c9-11ea-818a-42010a140053","847df9ee-05c9-11ea-818a-42010a140053","847e22ac-05c9-11ea-818a-42010a140053","847e4bba-05c9-11ea-818a-42010a140053","847f62b6-05c9-11ea-818a-42010a140053","847f4db2-05c9-11ea-818a-42010a140053","847ed4e0-05c9-11ea-818a-42010a140053","847eeb42-05c9-11ea-818a-42010a140053","847eff7e-05c9-11ea-818a-42010a140053","847f12b6-05c9-11ea-818a-42010a140053","847f2684-05c9-11ea-818a-42010a140053","847f3976-05c9-11ea-818a-42010a140053"],"label":["Stack","bundle","Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP->Stack)","bundle","Lrnr_pkg_SuperLearner_screener_screen.corP","Stack","chain","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm"],"level":[1,2,3,4,9,5,8,6,7,7,7,7,7,7,3,4,5,5,5,5,5,5],"sequential":[true,true,true,true,false,true,true,true,false,false,false,false,false,false,true,true,false,false,false,false,false,false],"state":["waiting","waiting","waiting","waiting","ready","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","ready","ready","ready","ready","ready","ready"],"group":["none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none"]},"edges":{"from":["847d2640-05c9-11ea-818a-42010a140053","847d2640-05c9-11ea-818a-42010a140053","847d5476-05c9-11ea-818a-42010a140053","847d5476-05c9-11ea-818a-42010a140053","847d7d34-05c9-11ea-818a-42010a140053","847d5476-05c9-11ea-818a-42010a140053","847da700-05c9-11ea-818a-42010a140053","847d5476-05c9-11ea-818a-42010a140053","847dd004-05c9-11ea-818a-42010a140053","847d5476-05c9-11ea-818a-42010a140053","847df9ee-05c9-11ea-818a-42010a140053","847d5476-05c9-11ea-818a-42010a140053","847e22ac-05c9-11ea-818a-42010a140053","847d5476-05c9-11ea-818a-42010a140053","847e4bba-05c9-11ea-818a-42010a140053","847e69ba-05c9-11ea-818a-42010a140053","847e7f9a-05c9-11ea-818a-42010a140053","847ea84e-05c9-11ea-818a-42010a140053","847ebb90-05c9-11ea-818a-42010a140053","847ed4e0-05c9-11ea-818a-42010a140053","847eeb42-05c9-11ea-818a-42010a140053","847eff7e-05c9-11ea-818a-42010a140053","847f12b6-05c9-11ea-818a-42010a140053","847f2684-05c9-11ea-818a-42010a140053","847f3976-05c9-11ea-818a-42010a140053","847f4db2-05c9-11ea-818a-42010a140053","847f62b6-05c9-11ea-818a-42010a140053","847f7936-05c9-11ea-818a-42010a140053"],"to":["847ea84e-05c9-11ea-818a-42010a140053","847d5476-05c9-11ea-818a-42010a140053","847e7f9a-05c9-11ea-818a-42010a140053","847d7d34-05c9-11ea-818a-42010a140053","847e69ba-05c9-11ea-818a-42010a140053","847da700-05c9-11ea-818a-42010a140053","847e69ba-05c9-11ea-818a-42010a140053","847dd004-05c9-11ea-818a-42010a140053","847e69ba-05c9-11ea-818a-42010a140053","847df9ee-05c9-11ea-818a-42010a140053","847e69ba-05c9-11ea-818a-42010a140053","847e22ac-05c9-11ea-818a-42010a140053","847e69ba-05c9-11ea-818a-42010a140053","847e4bba-05c9-11ea-818a-42010a140053","847e69ba-05c9-11ea-818a-42010a140053","847e7f9a-05c9-11ea-818a-42010a140053","847ea84e-05c9-11ea-818a-42010a140053","847ebb90-05c9-11ea-818a-42010a140053","847f7936-05c9-11ea-818a-42010a140053","847f4db2-05c9-11ea-818a-42010a140053","847f4db2-05c9-11ea-818a-42010a140053","847f4db2-05c9-11ea-818a-42010a140053","847f4db2-05c9-11ea-818a-42010a140053","847f4db2-05c9-11ea-818a-42010a140053","847f4db2-05c9-11ea-818a-42010a140053","847f62b6-05c9-11ea-818a-42010a140053","847f7936-05c9-11ea-818a-42010a140053","847f8e80-05c9-11ea-818a-42010a140053"],"label":["","","","","","","","","","","","","","","","","","","","","","","","","","","",""]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot"},"manipulation":{"enabled":false},"edges":{"arrows":"to"},"layout":{"hierarchical":{"enabled":true,"levelSeparation":500,"nodeSpacing":200,"direction":"RL"}},"groups":{"useDefaultGroups":true,"none":{"color":{"border":"black","background":"white"}}}},"groups":["none"],"width":"100%","height":"400px","idselection":{"enabled":false},"byselection":{"enabled":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)"},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-ac63700e2efbcefb9700">{"x":{"nodes":{"id":["c683c79e-0644-11ea-93a6-42010a140200","c683b434-0644-11ea-93a6-42010a140200","c682f3dc-0644-11ea-93a6-42010a140200","c682dc1c-0644-11ea-93a6-42010a140200","c681d8c6-0644-11ea-93a6-42010a140200","c682b296-0644-11ea-93a6-42010a140200","c681f8e2-0644-11ea-93a6-42010a140200","c6829cf2-0644-11ea-93a6-42010a140200","c682120a-0644-11ea-93a6-42010a140200","c682289e-0644-11ea-93a6-42010a140200","c6823dfc-0644-11ea-93a6-42010a140200","c68256f2-0644-11ea-93a6-42010a140200","c6826caa-0644-11ea-93a6-42010a140200","c682833e-0644-11ea-93a6-42010a140200","c6839fa8-0644-11ea-93a6-42010a140200","c68389f0-0644-11ea-93a6-42010a140200","c6830dae-0644-11ea-93a6-42010a140200","c6832280-0644-11ea-93a6-42010a140200","c68336e4-0644-11ea-93a6-42010a140200","c6834aee-0644-11ea-93a6-42010a140200","c6835f34-0644-11ea-93a6-42010a140200","c6837316-0644-11ea-93a6-42010a140200"],"label":["Stack","bundle","Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP->Stack)","bundle","Lrnr_pkg_SuperLearner_screener_screen.corP","Stack","chain","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm"],"level":[1,2,3,4,9,5,8,6,7,7,7,7,7,7,3,4,5,5,5,5,5,5],"sequential":[true,true,true,true,false,true,true,true,false,false,false,false,false,false,true,true,false,false,false,false,false,false],"state":["waiting","waiting","waiting","waiting","ready","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","ready","ready","ready","ready","ready","ready"],"group":["none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none"]},"edges":{"from":["c681d8c6-0644-11ea-93a6-42010a140200","c681d8c6-0644-11ea-93a6-42010a140200","c681f8e2-0644-11ea-93a6-42010a140200","c681f8e2-0644-11ea-93a6-42010a140200","c682120a-0644-11ea-93a6-42010a140200","c681f8e2-0644-11ea-93a6-42010a140200","c682289e-0644-11ea-93a6-42010a140200","c681f8e2-0644-11ea-93a6-42010a140200","c6823dfc-0644-11ea-93a6-42010a140200","c681f8e2-0644-11ea-93a6-42010a140200","c68256f2-0644-11ea-93a6-42010a140200","c681f8e2-0644-11ea-93a6-42010a140200","c6826caa-0644-11ea-93a6-42010a140200","c681f8e2-0644-11ea-93a6-42010a140200","c682833e-0644-11ea-93a6-42010a140200","c6829cf2-0644-11ea-93a6-42010a140200","c682b296-0644-11ea-93a6-42010a140200","c682dc1c-0644-11ea-93a6-42010a140200","c682f3dc-0644-11ea-93a6-42010a140200","c6830dae-0644-11ea-93a6-42010a140200","c6832280-0644-11ea-93a6-42010a140200","c68336e4-0644-11ea-93a6-42010a140200","c6834aee-0644-11ea-93a6-42010a140200","c6835f34-0644-11ea-93a6-42010a140200","c6837316-0644-11ea-93a6-42010a140200","c68389f0-0644-11ea-93a6-42010a140200","c6839fa8-0644-11ea-93a6-42010a140200","c683b434-0644-11ea-93a6-42010a140200"],"to":["c682dc1c-0644-11ea-93a6-42010a140200","c681f8e2-0644-11ea-93a6-42010a140200","c682b296-0644-11ea-93a6-42010a140200","c682120a-0644-11ea-93a6-42010a140200","c6829cf2-0644-11ea-93a6-42010a140200","c682289e-0644-11ea-93a6-42010a140200","c6829cf2-0644-11ea-93a6-42010a140200","c6823dfc-0644-11ea-93a6-42010a140200","c6829cf2-0644-11ea-93a6-42010a140200","c68256f2-0644-11ea-93a6-42010a140200","c6829cf2-0644-11ea-93a6-42010a140200","c6826caa-0644-11ea-93a6-42010a140200","c6829cf2-0644-11ea-93a6-42010a140200","c682833e-0644-11ea-93a6-42010a140200","c6829cf2-0644-11ea-93a6-42010a140200","c682b296-0644-11ea-93a6-42010a140200","c682dc1c-0644-11ea-93a6-42010a140200","c682f3dc-0644-11ea-93a6-42010a140200","c683b434-0644-11ea-93a6-42010a140200","c68389f0-0644-11ea-93a6-42010a140200","c68389f0-0644-11ea-93a6-42010a140200","c68389f0-0644-11ea-93a6-42010a140200","c68389f0-0644-11ea-93a6-42010a140200","c68389f0-0644-11ea-93a6-42010a140200","c68389f0-0644-11ea-93a6-42010a140200","c6839fa8-0644-11ea-93a6-42010a140200","c683b434-0644-11ea-93a6-42010a140200","c683c79e-0644-11ea-93a6-42010a140200"],"label":["","","","","","","","","","","","","","","","","","","","","","","","","","","",""]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot"},"manipulation":{"enabled":false},"edges":{"arrows":"to"},"layout":{"hierarchical":{"enabled":true,"levelSeparation":500,"nodeSpacing":200,"direction":"RL"}},"groups":{"useDefaultGroups":true,"none":{"color":{"border":"black","background":"white"}}}},"groups":["none"],"width":"100%","height":"400px","idselection":{"enabled":false},"byselection":{"enabled":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)"},"evals":[],"jsHooks":[]}</script>
 <p>We have made a library/stack of base learners and a metalearner, so we
 are ready to make the super learner. The super learner algorithm fits a
 metalearner on the validation-set predictions.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1">sl &lt;-<span class="st"> </span><span class="kw">make_learner</span>(Lrnr_sl,</a>
-<a class="sourceLine" id="cb27-2" data-line-number="2">  <span class="dt">learners =</span> fancy_stack,</a>
-<a class="sourceLine" id="cb27-3" data-line-number="3">  <span class="dt">metalearner =</span> metalearner</a>
-<a class="sourceLine" id="cb27-4" data-line-number="4">)</a>
-<a class="sourceLine" id="cb27-5" data-line-number="5"><span class="co"># we can visualize the super learner</span></a>
-<a class="sourceLine" id="cb27-6" data-line-number="6">dt_sl &lt;-<span class="st"> </span><span class="kw">delayed_learner_train</span>(sl, washb_task)</a>
-<a class="sourceLine" id="cb27-7" data-line-number="7"><span class="kw">plot</span>(dt_sl, <span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">height =</span> <span class="st">&quot;400px&quot;</span>, <span class="dt">width =</span> <span class="st">&quot;100%&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1">sl &lt;-<span class="st"> </span><span class="kw">make_learner</span>(Lrnr_sl,</a>
+<a class="sourceLine" id="cb26-2" data-line-number="2">  <span class="dt">learners =</span> fancy_stack,</a>
+<a class="sourceLine" id="cb26-3" data-line-number="3">  <span class="dt">metalearner =</span> metalearner</a>
+<a class="sourceLine" id="cb26-4" data-line-number="4">)</a>
+<a class="sourceLine" id="cb26-5" data-line-number="5"><span class="co"># we can visualize the super learner</span></a>
+<a class="sourceLine" id="cb26-6" data-line-number="6">dt_sl &lt;-<span class="st"> </span><span class="kw">delayed_learner_train</span>(sl, washb_task)</a>
+<a class="sourceLine" id="cb26-7" data-line-number="7"><span class="kw">plot</span>(dt_sl, <span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">height =</span> <span class="st">&quot;400px&quot;</span>, <span class="dt">width =</span> <span class="st">&quot;100%&quot;</span>)</a></code></pre></div>
 <p><div id="htmlwidget-62a347e481e519ec0e19" style="width:100%;height:400px;" class="visNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-62a347e481e519ec0e19">{"x":{"nodes":{"id":["84be36da-05c9-11ea-818a-42010a140053","84be232a-05c9-11ea-818a-42010a140053","84bde48c-05c9-11ea-818a-42010a140053","84bdd0a0-05c9-11ea-818a-42010a140053","84932260-05c9-11ea-818a-42010a140053","84930ece-05c9-11ea-818a-42010a140053","84925358-05c9-11ea-818a-42010a140053","84924052-05c9-11ea-818a-42010a140053","84914c2e-05c9-11ea-818a-42010a140053","84921924-05c9-11ea-818a-42010a140053","84915fc0-05c9-11ea-818a-42010a140053","849204a2-05c9-11ea-818a-42010a140053","849175aa-05c9-11ea-818a-42010a140053","84918a5e-05c9-11ea-818a-42010a140053","84919f4e-05c9-11ea-818a-42010a140053","8491b312-05c9-11ea-818a-42010a140053","8491d32e-05c9-11ea-818a-42010a140053","8491efb2-05c9-11ea-818a-42010a140053","8492f89e-05c9-11ea-818a-42010a140053","8492e3fe-05c9-11ea-818a-42010a140053","84926da2-05c9-11ea-818a-42010a140053","84928382-05c9-11ea-818a-42010a140053","84929688-05c9-11ea-818a-42010a140053","8492aa38-05c9-11ea-818a-42010a140053","8492bd5c-05c9-11ea-818a-42010a140053","8492d1ac-05c9-11ea-818a-42010a140053","84bdb9da-05c9-11ea-818a-42010a140053","84a5c3d4-05c9-11ea-818a-42010a140053","84a5b07e-05c9-11ea-818a-42010a140053","84a4f670-05c9-11ea-818a-42010a140053","84a4e2ac-05c9-11ea-818a-42010a140053","84a3f9a0-05c9-11ea-818a-42010a140053","84a4b96c-05c9-11ea-818a-42010a140053","84a40f12-05c9-11ea-818a-42010a140053","84a4a38c-05c9-11ea-818a-42010a140053","84a4270e-05c9-11ea-818a-42010a140053","84a43ce4-05c9-11ea-818a-42010a140053","84a45184-05c9-11ea-818a-42010a140053","84a4661a-05c9-11ea-818a-42010a140053","84a47ace-05c9-11ea-818a-42010a140053","84a48f50-05c9-11ea-818a-42010a140053","84a59b52-05c9-11ea-818a-42010a140053","84a58554-05c9-11ea-818a-42010a140053","84a50e8a-05c9-11ea-818a-42010a140053","84a52244-05c9-11ea-818a-42010a140053","84a53572-05c9-11ea-818a-42010a140053","84a548e6-05c9-11ea-818a-42010a140053","84a55d7c-05c9-11ea-818a-42010a140053","84a571ea-05c9-11ea-818a-42010a140053","84a83e0c-05c9-11ea-818a-42010a140053","84a82b06-05c9-11ea-818a-42010a140053","84a774fe-05c9-11ea-818a-42010a140053","84a761da-05c9-11ea-818a-42010a140053","84a679fa-05c9-11ea-818a-42010a140053","84a73a2a-05c9-11ea-818a-42010a140053","84a68d46-05c9-11ea-818a-42010a140053","84a72440-05c9-11ea-818a-42010a140053","84a6a20e-05c9-11ea-818a-42010a140053","84a6bc3a-05c9-11ea-818a-42010a140053","84a6d26a-05c9-11ea-818a-42010a140053","84a6e688-05c9-11ea-818a-42010a140053","84a6fb8c-05c9-11ea-818a-42010a140053","84a70f14-05c9-11ea-818a-42010a140053","84a81724-05c9-11ea-818a-42010a140053","84a802a2-05c9-11ea-818a-42010a140053","84a78cbe-05c9-11ea-818a-42010a140053","84a79fce-05c9-11ea-818a-42010a140053","84a7b356-05c9-11ea-818a-42010a140053","84a7c7a6-05c9-11ea-818a-42010a140053","84a7dc6e-05c9-11ea-818a-42010a140053","84a7efba-05c9-11ea-818a-42010a140053","84aaa8d6-05c9-11ea-818a-42010a140053","84aa95da-05c9-11ea-818a-42010a140053","84a9e0ae-05c9-11ea-818a-42010a140053","84a9cd94-05c9-11ea-818a-42010a140053","84a8f022-05c9-11ea-818a-42010a140053","84a9a6b6-05c9-11ea-818a-42010a140053","84a90396-05c9-11ea-818a-42010a140053","84a991f8-05c9-11ea-818a-42010a140053","84a91890-05c9-11ea-818a-42010a140053","84a92cae-05c9-11ea-818a-42010a140053","84a94126-05c9-11ea-818a-42010a140053","84a954cc-05c9-11ea-818a-42010a140053","84a96930-05c9-11ea-818a-42010a140053","84a97d3a-05c9-11ea-818a-42010a140053","84aa823e-05c9-11ea-818a-42010a140053","84aa6de4-05c9-11ea-818a-42010a140053","84a9f8f0-05c9-11ea-818a-42010a140053","84aa0c28-05c9-11ea-818a-42010a140053","84aa1f6a-05c9-11ea-818a-42010a140053","84aa332e-05c9-11ea-818a-42010a140053","84aa4792-05c9-11ea-818a-42010a140053","84aa5b06-05c9-11ea-818a-42010a140053","84ad14c2-05c9-11ea-818a-42010a140053","84ad018a-05c9-11ea-818a-42010a140053","84ac4d30-05c9-11ea-818a-42010a140053","84ac39b2-05c9-11ea-818a-42010a140053","84ab5a38-05c9-11ea-818a-42010a140053","84ac12ac-05c9-11ea-818a-42010a140053","84ab6d84-05c9-11ea-818a-42010a140053","84abfd1c-05c9-11ea-818a-42010a140053","84ab826a-05c9-11ea-818a-42010a140053","84ab9688-05c9-11ea-818a-42010a140053","84abab50-05c9-11ea-818a-42010a140053","84abc040-05c9-11ea-818a-42010a140053","84abd53a-05c9-11ea-818a-42010a140053","84abe93a-05c9-11ea-818a-42010a140053","84acee5c-05c9-11ea-818a-42010a140053","84acd930-05c9-11ea-818a-42010a140053","84ac64e6-05c9-11ea-818a-42010a140053","84ac7878-05c9-11ea-818a-42010a140053","84ac8b56-05c9-11ea-818a-42010a140053","84ac9ff6-05c9-11ea-818a-42010a140053","84acb36a-05c9-11ea-818a-42010a140053","84acc6f2-05c9-11ea-818a-42010a140053","84af8ad6-05c9-11ea-818a-42010a140053","84af77d0-05c9-11ea-818a-42010a140053","84aec196-05c9-11ea-818a-42010a140053","84aead8c-05c9-11ea-818a-42010a140053","84adcba6-05c9-11ea-818a-42010a140053","84ae85d2-05c9-11ea-818a-42010a140053","84addf9c-05c9-11ea-818a-42010a140053","84ae6ffc-05c9-11ea-818a-42010a140053","84adf590-05c9-11ea-818a-42010a140053","84ae0a30-05c9-11ea-818a-42010a140053","84ae1ef8-05c9-11ea-818a-42010a140053","84ae3334-05c9-11ea-818a-42010a140053","84ae4806-05c9-11ea-818a-42010a140053","84ae5bd4-05c9-11ea-818a-42010a140053","84af640c-05c9-11ea-818a-42010a140053","84af4f76-05c9-11ea-818a-42010a140053","84aeda78-05c9-11ea-818a-42010a140053","84aeedf6-05c9-11ea-818a-42010a140053","84af0138-05c9-11ea-818a-42010a140053","84af1592-05c9-11ea-818a-42010a140053","84af2910-05c9-11ea-818a-42010a140053","84af3c48-05c9-11ea-818a-42010a140053","84b21904-05c9-11ea-818a-42010a140053","84b20536-05c9-11ea-818a-42010a140053","84b1486c-05c9-11ea-818a-42010a140053","84b133a4-05c9-11ea-818a-42010a140053","84b04048-05c9-11ea-818a-42010a140053","84b10578-05c9-11ea-818a-42010a140053","84b054c0-05c9-11ea-818a-42010a140053","84b0e688-05c9-11ea-818a-42010a140053","84b06a8c-05c9-11ea-818a-42010a140053","84b07f40-05c9-11ea-818a-42010a140053","84b09408-05c9-11ea-818a-42010a140053","84b0a84e-05c9-11ea-818a-42010a140053","84b0bd02-05c9-11ea-818a-42010a140053","84b0d166-05c9-11ea-818a-42010a140053","84b1f168-05c9-11ea-818a-42010a140053","84b1dbba-05c9-11ea-818a-42010a140053","84b161e4-05c9-11ea-818a-42010a140053","84b17648-05c9-11ea-818a-42010a140053","84b18bf6-05c9-11ea-818a-42010a140053","84b1a082-05c9-11ea-818a-42010a140053","84b1b3d8-05c9-11ea-818a-42010a140053","84b1c7ec-05c9-11ea-818a-42010a140053","84b495a8-05c9-11ea-818a-42010a140053","84b480f4-05c9-11ea-818a-42010a140053","84b3c92a-05c9-11ea-818a-42010a140053","84b3b5a2-05c9-11ea-818a-42010a140053","84b2d0c4-05c9-11ea-818a-42010a140053","84b38e10-05c9-11ea-818a-42010a140053","84b2e4a6-05c9-11ea-818a-42010a140053","84b37902-05c9-11ea-818a-42010a140053","84b2f982-05c9-11ea-818a-42010a140053","84b30eae-05c9-11ea-818a-42010a140053","84b32344-05c9-11ea-818a-42010a140053","84b33834-05c9-11ea-818a-42010a140053","84b34eb4-05c9-11ea-818a-42010a140053","84b364bc-05c9-11ea-818a-42010a140053","84b46cae-05c9-11ea-818a-42010a140053","84b457e6-05c9-11ea-818a-42010a140053","84b3e126-05c9-11ea-818a-42010a140053","84b3f5f8-05c9-11ea-818a-42010a140053","84b40a98-05c9-11ea-818a-42010a140053","84b41e98-05c9-11ea-818a-42010a140053","84b431bc-05c9-11ea-818a-42010a140053","84b4454e-05c9-11ea-818a-42010a140053","84b86958-05c9-11ea-818a-42010a140053","84b855b2-05c9-11ea-818a-42010a140053","84b78d58-05c9-11ea-818a-42010a140053","84b77570-05c9-11ea-818a-42010a140053","84b68976-05c9-11ea-818a-42010a140053","84b74d02-05c9-11ea-818a-42010a140053","84b69d62-05c9-11ea-818a-42010a140053","84b73736-05c9-11ea-818a-42010a140053","84b6b3b0-05c9-11ea-818a-42010a140053","84b6c846-05c9-11ea-818a-42010a140053","84b6dd5e-05c9-11ea-818a-42010a140053","84b6f226-05c9-11ea-818a-42010a140053","84b70c48-05c9-11ea-818a-42010a140053","84b7230e-05c9-11ea-818a-42010a140053","84b83fd2-05c9-11ea-818a-42010a140053","84b82506-05c9-11ea-818a-42010a140053","84b7aae0-05c9-11ea-818a-42010a140053","84b7bfee-05c9-11ea-818a-42010a140053","84b7d380-05c9-11ea-818a-42010a140053","84b7e7d0-05c9-11ea-818a-42010a140053","84b7fc48-05c9-11ea-818a-42010a140053","84b81084-05c9-11ea-818a-42010a140053","84bb2756-05c9-11ea-818a-42010a140053","84bb13f6-05c9-11ea-818a-42010a140053","84ba548e-05c9-11ea-818a-42010a140053","84ba40ac-05c9-11ea-818a-42010a140053","84b93e28-05c9-11ea-818a-42010a140053","84ba11ea-05c9-11ea-818a-42010a140053","84b95552-05c9-11ea-818a-42010a140053","84b9f6e2-05c9-11ea-818a-42010a140053","84b96c36-05c9-11ea-818a-42010a140053","84b98856-05c9-11ea-818a-42010a140053","84b9a142-05c9-11ea-818a-42010a140053","84b9b8f8-05c9-11ea-818a-42010a140053","84b9cdfc-05c9-11ea-818a-42010a140053","84b9e2c4-05c9-11ea-818a-42010a140053","84bafede-05c9-11ea-818a-42010a140053","84baea2a-05c9-11ea-818a-42010a140053","84ba6e74-05c9-11ea-818a-42010a140053","84ba82ec-05c9-11ea-818a-42010a140053","84ba964c-05c9-11ea-818a-42010a140053","84baadda-05c9-11ea-818a-42010a140053","84bac234-05c9-11ea-818a-42010a140053","84bad698-05c9-11ea-818a-42010a140053","84bda436-05c9-11ea-818a-42010a140053","84bd90f4-05c9-11ea-818a-42010a140053","84bcd790-05c9-11ea-818a-42010a140053","84bcc462-05c9-11ea-818a-42010a140053","84bbe20e-05c9-11ea-818a-42010a140053","84bc9d02-05c9-11ea-818a-42010a140053","84bbf500-05c9-11ea-818a-42010a140053","84bc8790-05c9-11ea-818a-42010a140053","84bc0a5e-05c9-11ea-818a-42010a140053","84bc1f1c-05c9-11ea-818a-42010a140053","84bc3402-05c9-11ea-818a-42010a140053","84bc4816-05c9-11ea-818a-42010a140053","84bc5d38-05c9-11ea-818a-42010a140053","84bc7200-05c9-11ea-818a-42010a140053","84bd7ccc-05c9-11ea-818a-42010a140053","84bd684a-05c9-11ea-818a-42010a140053","84bcf054-05c9-11ea-818a-42010a140053","84bd03d2-05c9-11ea-818a-42010a140053","84bd1728-05c9-11ea-818a-42010a140053","84bd2c40-05c9-11ea-818a-42010a140053","84bd4130-05c9-11ea-818a-42010a140053","84bd5508-05c9-11ea-818a-42010a140053","84bdfa1c-05c9-11ea-818a-42010a140053","84be0e44-05c9-11ea-818a-42010a140053"],"label":["CV_","bundle","CV_Stack","bundle","Stack","bundle","Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP->Stack)","bundle","Lrnr_pkg_SuperLearner_screener_screen.corP","Stack","chain","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","bundle","Stack","bundle","Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP->Stack)","bundle","Lrnr_pkg_SuperLearner_screener_screen.corP","Stack","chain","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP->Stack)","bundle","Lrnr_pkg_SuperLearner_screener_screen.corP","Stack","chain","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP->Stack)","bundle","Lrnr_pkg_SuperLearner_screener_screen.corP","Stack","chain","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP->Stack)","bundle","Lrnr_pkg_SuperLearner_screener_screen.corP","Stack","chain","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP->Stack)","bundle","Lrnr_pkg_SuperLearner_screener_screen.corP","Stack","chain","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP->Stack)","bundle","Lrnr_pkg_SuperLearner_screener_screen.corP","Stack","chain","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP->Stack)","bundle","Lrnr_pkg_SuperLearner_screener_screen.corP","Stack","chain","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP->Stack)","bundle","Lrnr_pkg_SuperLearner_screener_screen.corP","Stack","chain","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP->Stack)","bundle","Lrnr_pkg_SuperLearner_screener_screen.corP","Stack","chain","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP->Stack)","bundle","Lrnr_pkg_SuperLearner_screener_screen.corP","Stack","chain","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","chain","Lrnr_nnls"],"level":[1,2,5,6,7,8,9,10,15,11,14,12,13,13,13,13,13,13,9,10,11,11,11,11,11,11,7,8,9,10,11,16,12,15,13,14,14,14,14,14,14,10,11,12,12,12,12,12,12,8,9,10,11,16,12,15,13,14,14,14,14,14,14,10,11,12,12,12,12,12,12,8,9,10,11,16,12,15,13,14,14,14,14,14,14,10,11,12,12,12,12,12,12,8,9,10,11,16,12,15,13,14,14,14,14,14,14,10,11,12,12,12,12,12,12,8,9,10,11,16,12,15,13,14,14,14,14,14,14,10,11,12,12,12,12,12,12,8,9,10,11,16,12,15,13,14,14,14,14,14,14,10,11,12,12,12,12,12,12,8,9,10,11,16,12,15,13,14,14,14,14,14,14,10,11,12,12,12,12,12,12,8,9,10,11,16,12,15,13,14,14,14,14,14,14,10,11,12,12,12,12,12,12,8,9,10,11,16,12,15,13,14,14,14,14,14,14,10,11,12,12,12,12,12,12,8,9,10,11,16,12,15,13,14,14,14,14,14,14,10,11,12,12,12,12,12,12,4,3],"sequential":[true,true,true,true,true,true,true,true,false,true,true,true,false,false,false,false,false,false,true,true,false,false,false,false,false,false,true,true,true,true,true,false,true,true,true,false,false,false,false,false,false,true,true,false,false,false,false,false,false,true,true,true,true,false,true,true,true,false,false,false,false,false,false,true,true,false,false,false,false,false,false,true,true,true,true,false,true,true,true,false,false,false,false,false,false,true,true,false,false,false,false,false,false,true,true,true,true,false,true,true,true,false,false,false,false,false,false,true,true,false,false,false,false,false,false,true,true,true,true,false,true,true,true,false,false,false,false,false,false,true,true,false,false,false,false,false,false,true,true,true,true,false,true,true,true,false,false,false,false,false,false,true,true,false,false,false,false,false,false,true,true,true,true,false,true,true,true,false,false,false,false,false,false,true,true,false,false,false,false,false,false,true,true,true,true,false,true,true,true,false,false,false,false,false,false,true,true,false,false,false,false,false,false,true,true,true,true,false,true,true,true,false,false,false,false,false,false,true,true,false,false,false,false,false,false,true,true,true,true,false,true,true,true,false,false,false,false,false,false,true,true,false,false,false,false,false,false,true,false],"state":["waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","ready","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","ready","ready","ready","ready","ready","ready","waiting","waiting","waiting","waiting","waiting","ready","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","ready","ready","ready","ready","ready","ready","waiting","waiting","waiting","waiting","ready","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","ready","ready","ready","ready","ready","ready","waiting","waiting","waiting","waiting","ready","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","ready","ready","ready","ready","ready","ready","waiting","waiting","waiting","waiting","ready","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","ready","ready","ready","ready","ready","ready","waiting","waiting","waiting","waiting","ready","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","ready","ready","ready","ready","ready","ready","waiting","waiting","waiting","waiting","ready","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","ready","ready","ready","ready","ready","ready","waiting","waiting","waiting","waiting","ready","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","ready","ready","ready","ready","ready","ready","waiting","waiting","waiting","waiting","ready","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","ready","ready","ready","ready","ready","ready","waiting","waiting","waiting","waiting","ready","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","ready","ready","ready","ready","ready","ready","waiting","waiting","waiting","waiting","ready","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","ready","ready","ready","ready","ready","ready","waiting","waiting"],"group":["none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none"]},"edges":{"from":["84914c2e-05c9-11ea-818a-42010a140053","84914c2e-05c9-11ea-818a-42010a140053","84915fc0-05c9-11ea-818a-42010a140053","84915fc0-05c9-11ea-818a-42010a140053","849175aa-05c9-11ea-818a-42010a140053","84915fc0-05c9-11ea-818a-42010a140053","84918a5e-05c9-11ea-818a-42010a140053","84915fc0-05c9-11ea-818a-42010a140053","84919f4e-05c9-11ea-818a-42010a140053","84915fc0-05c9-11ea-818a-42010a140053","8491b312-05c9-11ea-818a-42010a140053","84915fc0-05c9-11ea-818a-42010a140053","8491d32e-05c9-11ea-818a-42010a140053","84915fc0-05c9-11ea-818a-42010a140053","8491efb2-05c9-11ea-818a-42010a140053","849204a2-05c9-11ea-818a-42010a140053","84921924-05c9-11ea-818a-42010a140053","84924052-05c9-11ea-818a-42010a140053","84925358-05c9-11ea-818a-42010a140053","84926da2-05c9-11ea-818a-42010a140053","84928382-05c9-11ea-818a-42010a140053","84929688-05c9-11ea-818a-42010a140053","8492aa38-05c9-11ea-818a-42010a140053","8492bd5c-05c9-11ea-818a-42010a140053","8492d1ac-05c9-11ea-818a-42010a140053","8492e3fe-05c9-11ea-818a-42010a140053","8492f89e-05c9-11ea-818a-42010a140053","84930ece-05c9-11ea-818a-42010a140053","84932260-05c9-11ea-818a-42010a140053","84a3f9a0-05c9-11ea-818a-42010a140053","84a3f9a0-05c9-11ea-818a-42010a140053","84a40f12-05c9-11ea-818a-42010a140053","84a40f12-05c9-11ea-818a-42010a140053","84a4270e-05c9-11ea-818a-42010a140053","84a40f12-05c9-11ea-818a-42010a140053","84a43ce4-05c9-11ea-818a-42010a140053","84a40f12-05c9-11ea-818a-42010a140053","84a45184-05c9-11ea-818a-42010a140053","84a40f12-05c9-11ea-818a-42010a140053","84a4661a-05c9-11ea-818a-42010a140053","84a40f12-05c9-11ea-818a-42010a140053","84a47ace-05c9-11ea-818a-42010a140053","84a40f12-05c9-11ea-818a-42010a140053","84a48f50-05c9-11ea-818a-42010a140053","84a4a38c-05c9-11ea-818a-42010a140053","84a4b96c-05c9-11ea-818a-42010a140053","84a4e2ac-05c9-11ea-818a-42010a140053","84a4f670-05c9-11ea-818a-42010a140053","84a50e8a-05c9-11ea-818a-42010a140053","84a52244-05c9-11ea-818a-42010a140053","84a53572-05c9-11ea-818a-42010a140053","84a548e6-05c9-11ea-818a-42010a140053","84a55d7c-05c9-11ea-818a-42010a140053","84a571ea-05c9-11ea-818a-42010a140053","84a58554-05c9-11ea-818a-42010a140053","84a59b52-05c9-11ea-818a-42010a140053","84a5b07e-05c9-11ea-818a-42010a140053","84a5c3d4-05c9-11ea-818a-42010a140053","84a679fa-05c9-11ea-818a-42010a140053","84a679fa-05c9-11ea-818a-42010a140053","84a68d46-05c9-11ea-818a-42010a140053","84a68d46-05c9-11ea-818a-42010a140053","84a6a20e-05c9-11ea-818a-42010a140053","84a68d46-05c9-11ea-818a-42010a140053","84a6bc3a-05c9-11ea-818a-42010a140053","84a68d46-05c9-11ea-818a-42010a140053","84a6d26a-05c9-11ea-818a-42010a140053","84a68d46-05c9-11ea-818a-42010a140053","84a6e688-05c9-11ea-818a-42010a140053","84a68d46-05c9-11ea-818a-42010a140053","84a6fb8c-05c9-11ea-818a-42010a140053","84a68d46-05c9-11ea-818a-42010a140053","84a70f14-05c9-11ea-818a-42010a140053","84a72440-05c9-11ea-818a-42010a140053","84a73a2a-05c9-11ea-818a-42010a140053","84a761da-05c9-11ea-818a-42010a140053","84a774fe-05c9-11ea-818a-42010a140053","84a78cbe-05c9-11ea-818a-42010a140053","84a79fce-05c9-11ea-818a-42010a140053","84a7b356-05c9-11ea-818a-42010a140053","84a7c7a6-05c9-11ea-818a-42010a140053","84a7dc6e-05c9-11ea-818a-42010a140053","84a7efba-05c9-11ea-818a-42010a140053","84a802a2-05c9-11ea-818a-42010a140053","84a81724-05c9-11ea-818a-42010a140053","84a82b06-05c9-11ea-818a-42010a140053","84a83e0c-05c9-11ea-818a-42010a140053","84a8f022-05c9-11ea-818a-42010a140053","84a8f022-05c9-11ea-818a-42010a140053","84a90396-05c9-11ea-818a-42010a140053","84a90396-05c9-11ea-818a-42010a140053","84a91890-05c9-11ea-818a-42010a140053","84a90396-05c9-11ea-818a-42010a140053","84a92cae-05c9-11ea-818a-42010a140053","84a90396-05c9-11ea-818a-42010a140053","84a94126-05c9-11ea-818a-42010a140053","84a90396-05c9-11ea-818a-42010a140053","84a954cc-05c9-11ea-818a-42010a140053","84a90396-05c9-11ea-818a-42010a140053","84a96930-05c9-11ea-818a-42010a140053","84a90396-05c9-11ea-818a-42010a140053","84a97d3a-05c9-11ea-818a-42010a140053","84a991f8-05c9-11ea-818a-42010a140053","84a9a6b6-05c9-11ea-818a-42010a140053","84a9cd94-05c9-11ea-818a-42010a140053","84a9e0ae-05c9-11ea-818a-42010a140053","84a9f8f0-05c9-11ea-818a-42010a140053","84aa0c28-05c9-11ea-818a-42010a140053","84aa1f6a-05c9-11ea-818a-42010a140053","84aa332e-05c9-11ea-818a-42010a140053","84aa4792-05c9-11ea-818a-42010a140053","84aa5b06-05c9-11ea-818a-42010a140053","84aa6de4-05c9-11ea-818a-42010a140053","84aa823e-05c9-11ea-818a-42010a140053","84aa95da-05c9-11ea-818a-42010a140053","84aaa8d6-05c9-11ea-818a-42010a140053","84ab5a38-05c9-11ea-818a-42010a140053","84ab5a38-05c9-11ea-818a-42010a140053","84ab6d84-05c9-11ea-818a-42010a140053","84ab6d84-05c9-11ea-818a-42010a140053","84ab826a-05c9-11ea-818a-42010a140053","84ab6d84-05c9-11ea-818a-42010a140053","84ab9688-05c9-11ea-818a-42010a140053","84ab6d84-05c9-11ea-818a-42010a140053","84abab50-05c9-11ea-818a-42010a140053","84ab6d84-05c9-11ea-818a-42010a140053","84abc040-05c9-11ea-818a-42010a140053","84ab6d84-05c9-11ea-818a-42010a140053","84abd53a-05c9-11ea-818a-42010a140053","84ab6d84-05c9-11ea-818a-42010a140053","84abe93a-05c9-11ea-818a-42010a140053","84abfd1c-05c9-11ea-818a-42010a140053","84ac12ac-05c9-11ea-818a-42010a140053","84ac39b2-05c9-11ea-818a-42010a140053","84ac4d30-05c9-11ea-818a-42010a140053","84ac64e6-05c9-11ea-818a-42010a140053","84ac7878-05c9-11ea-818a-42010a140053","84ac8b56-05c9-11ea-818a-42010a140053","84ac9ff6-05c9-11ea-818a-42010a140053","84acb36a-05c9-11ea-818a-42010a140053","84acc6f2-05c9-11ea-818a-42010a140053","84acd930-05c9-11ea-818a-42010a140053","84acee5c-05c9-11ea-818a-42010a140053","84ad018a-05c9-11ea-818a-42010a140053","84ad14c2-05c9-11ea-818a-42010a140053","84adcba6-05c9-11ea-818a-42010a140053","84adcba6-05c9-11ea-818a-42010a140053","84addf9c-05c9-11ea-818a-42010a140053","84addf9c-05c9-11ea-818a-42010a140053","84adf590-05c9-11ea-818a-42010a140053","84addf9c-05c9-11ea-818a-42010a140053","84ae0a30-05c9-11ea-818a-42010a140053","84addf9c-05c9-11ea-818a-42010a140053","84ae1ef8-05c9-11ea-818a-42010a140053","84addf9c-05c9-11ea-818a-42010a140053","84ae3334-05c9-11ea-818a-42010a140053","84addf9c-05c9-11ea-818a-42010a140053","84ae4806-05c9-11ea-818a-42010a140053","84addf9c-05c9-11ea-818a-42010a140053","84ae5bd4-05c9-11ea-818a-42010a140053","84ae6ffc-05c9-11ea-818a-42010a140053","84ae85d2-05c9-11ea-818a-42010a140053","84aead8c-05c9-11ea-818a-42010a140053","84aec196-05c9-11ea-818a-42010a140053","84aeda78-05c9-11ea-818a-42010a140053","84aeedf6-05c9-11ea-818a-42010a140053","84af0138-05c9-11ea-818a-42010a140053","84af1592-05c9-11ea-818a-42010a140053","84af2910-05c9-11ea-818a-42010a140053","84af3c48-05c9-11ea-818a-42010a140053","84af4f76-05c9-11ea-818a-42010a140053","84af640c-05c9-11ea-818a-42010a140053","84af77d0-05c9-11ea-818a-42010a140053","84af8ad6-05c9-11ea-818a-42010a140053","84b04048-05c9-11ea-818a-42010a140053","84b04048-05c9-11ea-818a-42010a140053","84b054c0-05c9-11ea-818a-42010a140053","84b054c0-05c9-11ea-818a-42010a140053","84b06a8c-05c9-11ea-818a-42010a140053","84b054c0-05c9-11ea-818a-42010a140053","84b07f40-05c9-11ea-818a-42010a140053","84b054c0-05c9-11ea-818a-42010a140053","84b09408-05c9-11ea-818a-42010a140053","84b054c0-05c9-11ea-818a-42010a140053","84b0a84e-05c9-11ea-818a-42010a140053","84b054c0-05c9-11ea-818a-42010a140053","84b0bd02-05c9-11ea-818a-42010a140053","84b054c0-05c9-11ea-818a-42010a140053","84b0d166-05c9-11ea-818a-42010a140053","84b0e688-05c9-11ea-818a-42010a140053","84b10578-05c9-11ea-818a-42010a140053","84b133a4-05c9-11ea-818a-42010a140053","84b1486c-05c9-11ea-818a-42010a140053","84b161e4-05c9-11ea-818a-42010a140053","84b17648-05c9-11ea-818a-42010a140053","84b18bf6-05c9-11ea-818a-42010a140053","84b1a082-05c9-11ea-818a-42010a140053","84b1b3d8-05c9-11ea-818a-42010a140053","84b1c7ec-05c9-11ea-818a-42010a140053","84b1dbba-05c9-11ea-818a-42010a140053","84b1f168-05c9-11ea-818a-42010a140053","84b20536-05c9-11ea-818a-42010a140053","84b21904-05c9-11ea-818a-42010a140053","84b2d0c4-05c9-11ea-818a-42010a140053","84b2d0c4-05c9-11ea-818a-42010a140053","84b2e4a6-05c9-11ea-818a-42010a140053","84b2e4a6-05c9-11ea-818a-42010a140053","84b2f982-05c9-11ea-818a-42010a140053","84b2e4a6-05c9-11ea-818a-42010a140053","84b30eae-05c9-11ea-818a-42010a140053","84b2e4a6-05c9-11ea-818a-42010a140053","84b32344-05c9-11ea-818a-42010a140053","84b2e4a6-05c9-11ea-818a-42010a140053","84b33834-05c9-11ea-818a-42010a140053","84b2e4a6-05c9-11ea-818a-42010a140053","84b34eb4-05c9-11ea-818a-42010a140053","84b2e4a6-05c9-11ea-818a-42010a140053","84b364bc-05c9-11ea-818a-42010a140053","84b37902-05c9-11ea-818a-42010a140053","84b38e10-05c9-11ea-818a-42010a140053","84b3b5a2-05c9-11ea-818a-42010a140053","84b3c92a-05c9-11ea-818a-42010a140053","84b3e126-05c9-11ea-818a-42010a140053","84b3f5f8-05c9-11ea-818a-42010a140053","84b40a98-05c9-11ea-818a-42010a140053","84b41e98-05c9-11ea-818a-42010a140053","84b431bc-05c9-11ea-818a-42010a140053","84b4454e-05c9-11ea-818a-42010a140053","84b457e6-05c9-11ea-818a-42010a140053","84b46cae-05c9-11ea-818a-42010a140053","84b480f4-05c9-11ea-818a-42010a140053","84b495a8-05c9-11ea-818a-42010a140053","84b68976-05c9-11ea-818a-42010a140053","84b68976-05c9-11ea-818a-42010a140053","84b69d62-05c9-11ea-818a-42010a140053","84b69d62-05c9-11ea-818a-42010a140053","84b6b3b0-05c9-11ea-818a-42010a140053","84b69d62-05c9-11ea-818a-42010a140053","84b6c846-05c9-11ea-818a-42010a140053","84b69d62-05c9-11ea-818a-42010a140053","84b6dd5e-05c9-11ea-818a-42010a140053","84b69d62-05c9-11ea-818a-42010a140053","84b6f226-05c9-11ea-818a-42010a140053","84b69d62-05c9-11ea-818a-42010a140053","84b70c48-05c9-11ea-818a-42010a140053","84b69d62-05c9-11ea-818a-42010a140053","84b7230e-05c9-11ea-818a-42010a140053","84b73736-05c9-11ea-818a-42010a140053","84b74d02-05c9-11ea-818a-42010a140053","84b77570-05c9-11ea-818a-42010a140053","84b78d58-05c9-11ea-818a-42010a140053","84b7aae0-05c9-11ea-818a-42010a140053","84b7bfee-05c9-11ea-818a-42010a140053","84b7d380-05c9-11ea-818a-42010a140053","84b7e7d0-05c9-11ea-818a-42010a140053","84b7fc48-05c9-11ea-818a-42010a140053","84b81084-05c9-11ea-818a-42010a140053","84b82506-05c9-11ea-818a-42010a140053","84b83fd2-05c9-11ea-818a-42010a140053","84b855b2-05c9-11ea-818a-42010a140053","84b86958-05c9-11ea-818a-42010a140053","84b93e28-05c9-11ea-818a-42010a140053","84b93e28-05c9-11ea-818a-42010a140053","84b95552-05c9-11ea-818a-42010a140053","84b95552-05c9-11ea-818a-42010a140053","84b96c36-05c9-11ea-818a-42010a140053","84b95552-05c9-11ea-818a-42010a140053","84b98856-05c9-11ea-818a-42010a140053","84b95552-05c9-11ea-818a-42010a140053","84b9a142-05c9-11ea-818a-42010a140053","84b95552-05c9-11ea-818a-42010a140053","84b9b8f8-05c9-11ea-818a-42010a140053","84b95552-05c9-11ea-818a-42010a140053","84b9cdfc-05c9-11ea-818a-42010a140053","84b95552-05c9-11ea-818a-42010a140053","84b9e2c4-05c9-11ea-818a-42010a140053","84b9f6e2-05c9-11ea-818a-42010a140053","84ba11ea-05c9-11ea-818a-42010a140053","84ba40ac-05c9-11ea-818a-42010a140053","84ba548e-05c9-11ea-818a-42010a140053","84ba6e74-05c9-11ea-818a-42010a140053","84ba82ec-05c9-11ea-818a-42010a140053","84ba964c-05c9-11ea-818a-42010a140053","84baadda-05c9-11ea-818a-42010a140053","84bac234-05c9-11ea-818a-42010a140053","84bad698-05c9-11ea-818a-42010a140053","84baea2a-05c9-11ea-818a-42010a140053","84bafede-05c9-11ea-818a-42010a140053","84bb13f6-05c9-11ea-818a-42010a140053","84bb2756-05c9-11ea-818a-42010a140053","84bbe20e-05c9-11ea-818a-42010a140053","84bbe20e-05c9-11ea-818a-42010a140053","84bbf500-05c9-11ea-818a-42010a140053","84bbf500-05c9-11ea-818a-42010a140053","84bc0a5e-05c9-11ea-818a-42010a140053","84bbf500-05c9-11ea-818a-42010a140053","84bc1f1c-05c9-11ea-818a-42010a140053","84bbf500-05c9-11ea-818a-42010a140053","84bc3402-05c9-11ea-818a-42010a140053","84bbf500-05c9-11ea-818a-42010a140053","84bc4816-05c9-11ea-818a-42010a140053","84bbf500-05c9-11ea-818a-42010a140053","84bc5d38-05c9-11ea-818a-42010a140053","84bbf500-05c9-11ea-818a-42010a140053","84bc7200-05c9-11ea-818a-42010a140053","84bc8790-05c9-11ea-818a-42010a140053","84bc9d02-05c9-11ea-818a-42010a140053","84bcc462-05c9-11ea-818a-42010a140053","84bcd790-05c9-11ea-818a-42010a140053","84bcf054-05c9-11ea-818a-42010a140053","84bd03d2-05c9-11ea-818a-42010a140053","84bd1728-05c9-11ea-818a-42010a140053","84bd2c40-05c9-11ea-818a-42010a140053","84bd4130-05c9-11ea-818a-42010a140053","84bd5508-05c9-11ea-818a-42010a140053","84bd684a-05c9-11ea-818a-42010a140053","84bd7ccc-05c9-11ea-818a-42010a140053","84bd90f4-05c9-11ea-818a-42010a140053","84bda436-05c9-11ea-818a-42010a140053","84bdb9da-05c9-11ea-818a-42010a140053","84bdd0a0-05c9-11ea-818a-42010a140053","84bde48c-05c9-11ea-818a-42010a140053","84bde48c-05c9-11ea-818a-42010a140053","84bdfa1c-05c9-11ea-818a-42010a140053","84bdfa1c-05c9-11ea-818a-42010a140053","84be0e44-05c9-11ea-818a-42010a140053","84be232a-05c9-11ea-818a-42010a140053"],"to":["84924052-05c9-11ea-818a-42010a140053","84915fc0-05c9-11ea-818a-42010a140053","84921924-05c9-11ea-818a-42010a140053","849175aa-05c9-11ea-818a-42010a140053","849204a2-05c9-11ea-818a-42010a140053","84918a5e-05c9-11ea-818a-42010a140053","849204a2-05c9-11ea-818a-42010a140053","84919f4e-05c9-11ea-818a-42010a140053","849204a2-05c9-11ea-818a-42010a140053","8491b312-05c9-11ea-818a-42010a140053","849204a2-05c9-11ea-818a-42010a140053","8491d32e-05c9-11ea-818a-42010a140053","849204a2-05c9-11ea-818a-42010a140053","8491efb2-05c9-11ea-818a-42010a140053","849204a2-05c9-11ea-818a-42010a140053","84921924-05c9-11ea-818a-42010a140053","84924052-05c9-11ea-818a-42010a140053","84925358-05c9-11ea-818a-42010a140053","84930ece-05c9-11ea-818a-42010a140053","8492e3fe-05c9-11ea-818a-42010a140053","8492e3fe-05c9-11ea-818a-42010a140053","8492e3fe-05c9-11ea-818a-42010a140053","8492e3fe-05c9-11ea-818a-42010a140053","8492e3fe-05c9-11ea-818a-42010a140053","8492e3fe-05c9-11ea-818a-42010a140053","8492f89e-05c9-11ea-818a-42010a140053","84930ece-05c9-11ea-818a-42010a140053","84932260-05c9-11ea-818a-42010a140053","84bdd0a0-05c9-11ea-818a-42010a140053","84a4e2ac-05c9-11ea-818a-42010a140053","84a40f12-05c9-11ea-818a-42010a140053","84a4b96c-05c9-11ea-818a-42010a140053","84a4270e-05c9-11ea-818a-42010a140053","84a4a38c-05c9-11ea-818a-42010a140053","84a43ce4-05c9-11ea-818a-42010a140053","84a4a38c-05c9-11ea-818a-42010a140053","84a45184-05c9-11ea-818a-42010a140053","84a4a38c-05c9-11ea-818a-42010a140053","84a4661a-05c9-11ea-818a-42010a140053","84a4a38c-05c9-11ea-818a-42010a140053","84a47ace-05c9-11ea-818a-42010a140053","84a4a38c-05c9-11ea-818a-42010a140053","84a48f50-05c9-11ea-818a-42010a140053","84a4a38c-05c9-11ea-818a-42010a140053","84a4b96c-05c9-11ea-818a-42010a140053","84a4e2ac-05c9-11ea-818a-42010a140053","84a4f670-05c9-11ea-818a-42010a140053","84a5b07e-05c9-11ea-818a-42010a140053","84a58554-05c9-11ea-818a-42010a140053","84a58554-05c9-11ea-818a-42010a140053","84a58554-05c9-11ea-818a-42010a140053","84a58554-05c9-11ea-818a-42010a140053","84a58554-05c9-11ea-818a-42010a140053","84a58554-05c9-11ea-818a-42010a140053","84a59b52-05c9-11ea-818a-42010a140053","84a5b07e-05c9-11ea-818a-42010a140053","84a5c3d4-05c9-11ea-818a-42010a140053","84bdb9da-05c9-11ea-818a-42010a140053","84a761da-05c9-11ea-818a-42010a140053","84a68d46-05c9-11ea-818a-42010a140053","84a73a2a-05c9-11ea-818a-42010a140053","84a6a20e-05c9-11ea-818a-42010a140053","84a72440-05c9-11ea-818a-42010a140053","84a6bc3a-05c9-11ea-818a-42010a140053","84a72440-05c9-11ea-818a-42010a140053","84a6d26a-05c9-11ea-818a-42010a140053","84a72440-05c9-11ea-818a-42010a140053","84a6e688-05c9-11ea-818a-42010a140053","84a72440-05c9-11ea-818a-42010a140053","84a6fb8c-05c9-11ea-818a-42010a140053","84a72440-05c9-11ea-818a-42010a140053","84a70f14-05c9-11ea-818a-42010a140053","84a72440-05c9-11ea-818a-42010a140053","84a73a2a-05c9-11ea-818a-42010a140053","84a761da-05c9-11ea-818a-42010a140053","84a774fe-05c9-11ea-818a-42010a140053","84a82b06-05c9-11ea-818a-42010a140053","84a802a2-05c9-11ea-818a-42010a140053","84a802a2-05c9-11ea-818a-42010a140053","84a802a2-05c9-11ea-818a-42010a140053","84a802a2-05c9-11ea-818a-42010a140053","84a802a2-05c9-11ea-818a-42010a140053","84a802a2-05c9-11ea-818a-42010a140053","84a81724-05c9-11ea-818a-42010a140053","84a82b06-05c9-11ea-818a-42010a140053","84a83e0c-05c9-11ea-818a-42010a140053","84bdb9da-05c9-11ea-818a-42010a140053","84a9cd94-05c9-11ea-818a-42010a140053","84a90396-05c9-11ea-818a-42010a140053","84a9a6b6-05c9-11ea-818a-42010a140053","84a91890-05c9-11ea-818a-42010a140053","84a991f8-05c9-11ea-818a-42010a140053","84a92cae-05c9-11ea-818a-42010a140053","84a991f8-05c9-11ea-818a-42010a140053","84a94126-05c9-11ea-818a-42010a140053","84a991f8-05c9-11ea-818a-42010a140053","84a954cc-05c9-11ea-818a-42010a140053","84a991f8-05c9-11ea-818a-42010a140053","84a96930-05c9-11ea-818a-42010a140053","84a991f8-05c9-11ea-818a-42010a140053","84a97d3a-05c9-11ea-818a-42010a140053","84a991f8-05c9-11ea-818a-42010a140053","84a9a6b6-05c9-11ea-818a-42010a140053","84a9cd94-05c9-11ea-818a-42010a140053","84a9e0ae-05c9-11ea-818a-42010a140053","84aa95da-05c9-11ea-818a-42010a140053","84aa6de4-05c9-11ea-818a-42010a140053","84aa6de4-05c9-11ea-818a-42010a140053","84aa6de4-05c9-11ea-818a-42010a140053","84aa6de4-05c9-11ea-818a-42010a140053","84aa6de4-05c9-11ea-818a-42010a140053","84aa6de4-05c9-11ea-818a-42010a140053","84aa823e-05c9-11ea-818a-42010a140053","84aa95da-05c9-11ea-818a-42010a140053","84aaa8d6-05c9-11ea-818a-42010a140053","84bdb9da-05c9-11ea-818a-42010a140053","84ac39b2-05c9-11ea-818a-42010a140053","84ab6d84-05c9-11ea-818a-42010a140053","84ac12ac-05c9-11ea-818a-42010a140053","84ab826a-05c9-11ea-818a-42010a140053","84abfd1c-05c9-11ea-818a-42010a140053","84ab9688-05c9-11ea-818a-42010a140053","84abfd1c-05c9-11ea-818a-42010a140053","84abab50-05c9-11ea-818a-42010a140053","84abfd1c-05c9-11ea-818a-42010a140053","84abc040-05c9-11ea-818a-42010a140053","84abfd1c-05c9-11ea-818a-42010a140053","84abd53a-05c9-11ea-818a-42010a140053","84abfd1c-05c9-11ea-818a-42010a140053","84abe93a-05c9-11ea-818a-42010a140053","84abfd1c-05c9-11ea-818a-42010a140053","84ac12ac-05c9-11ea-818a-42010a140053","84ac39b2-05c9-11ea-818a-42010a140053","84ac4d30-05c9-11ea-818a-42010a140053","84ad018a-05c9-11ea-818a-42010a140053","84acd930-05c9-11ea-818a-42010a140053","84acd930-05c9-11ea-818a-42010a140053","84acd930-05c9-11ea-818a-42010a140053","84acd930-05c9-11ea-818a-42010a140053","84acd930-05c9-11ea-818a-42010a140053","84acd930-05c9-11ea-818a-42010a140053","84acee5c-05c9-11ea-818a-42010a140053","84ad018a-05c9-11ea-818a-42010a140053","84ad14c2-05c9-11ea-818a-42010a140053","84bdb9da-05c9-11ea-818a-42010a140053","84aead8c-05c9-11ea-818a-42010a140053","84addf9c-05c9-11ea-818a-42010a140053","84ae85d2-05c9-11ea-818a-42010a140053","84adf590-05c9-11ea-818a-42010a140053","84ae6ffc-05c9-11ea-818a-42010a140053","84ae0a30-05c9-11ea-818a-42010a140053","84ae6ffc-05c9-11ea-818a-42010a140053","84ae1ef8-05c9-11ea-818a-42010a140053","84ae6ffc-05c9-11ea-818a-42010a140053","84ae3334-05c9-11ea-818a-42010a140053","84ae6ffc-05c9-11ea-818a-42010a140053","84ae4806-05c9-11ea-818a-42010a140053","84ae6ffc-05c9-11ea-818a-42010a140053","84ae5bd4-05c9-11ea-818a-42010a140053","84ae6ffc-05c9-11ea-818a-42010a140053","84ae85d2-05c9-11ea-818a-42010a140053","84aead8c-05c9-11ea-818a-42010a140053","84aec196-05c9-11ea-818a-42010a140053","84af77d0-05c9-11ea-818a-42010a140053","84af4f76-05c9-11ea-818a-42010a140053","84af4f76-05c9-11ea-818a-42010a140053","84af4f76-05c9-11ea-818a-42010a140053","84af4f76-05c9-11ea-818a-42010a140053","84af4f76-05c9-11ea-818a-42010a140053","84af4f76-05c9-11ea-818a-42010a140053","84af640c-05c9-11ea-818a-42010a140053","84af77d0-05c9-11ea-818a-42010a140053","84af8ad6-05c9-11ea-818a-42010a140053","84bdb9da-05c9-11ea-818a-42010a140053","84b133a4-05c9-11ea-818a-42010a140053","84b054c0-05c9-11ea-818a-42010a140053","84b10578-05c9-11ea-818a-42010a140053","84b06a8c-05c9-11ea-818a-42010a140053","84b0e688-05c9-11ea-818a-42010a140053","84b07f40-05c9-11ea-818a-42010a140053","84b0e688-05c9-11ea-818a-42010a140053","84b09408-05c9-11ea-818a-42010a140053","84b0e688-05c9-11ea-818a-42010a140053","84b0a84e-05c9-11ea-818a-42010a140053","84b0e688-05c9-11ea-818a-42010a140053","84b0bd02-05c9-11ea-818a-42010a140053","84b0e688-05c9-11ea-818a-42010a140053","84b0d166-05c9-11ea-818a-42010a140053","84b0e688-05c9-11ea-818a-42010a140053","84b10578-05c9-11ea-818a-42010a140053","84b133a4-05c9-11ea-818a-42010a140053","84b1486c-05c9-11ea-818a-42010a140053","84b20536-05c9-11ea-818a-42010a140053","84b1dbba-05c9-11ea-818a-42010a140053","84b1dbba-05c9-11ea-818a-42010a140053","84b1dbba-05c9-11ea-818a-42010a140053","84b1dbba-05c9-11ea-818a-42010a140053","84b1dbba-05c9-11ea-818a-42010a140053","84b1dbba-05c9-11ea-818a-42010a140053","84b1f168-05c9-11ea-818a-42010a140053","84b20536-05c9-11ea-818a-42010a140053","84b21904-05c9-11ea-818a-42010a140053","84bdb9da-05c9-11ea-818a-42010a140053","84b3b5a2-05c9-11ea-818a-42010a140053","84b2e4a6-05c9-11ea-818a-42010a140053","84b38e10-05c9-11ea-818a-42010a140053","84b2f982-05c9-11ea-818a-42010a140053","84b37902-05c9-11ea-818a-42010a140053","84b30eae-05c9-11ea-818a-42010a140053","84b37902-05c9-11ea-818a-42010a140053","84b32344-05c9-11ea-818a-42010a140053","84b37902-05c9-11ea-818a-42010a140053","84b33834-05c9-11ea-818a-42010a140053","84b37902-05c9-11ea-818a-42010a140053","84b34eb4-05c9-11ea-818a-42010a140053","84b37902-05c9-11ea-818a-42010a140053","84b364bc-05c9-11ea-818a-42010a140053","84b37902-05c9-11ea-818a-42010a140053","84b38e10-05c9-11ea-818a-42010a140053","84b3b5a2-05c9-11ea-818a-42010a140053","84b3c92a-05c9-11ea-818a-42010a140053","84b480f4-05c9-11ea-818a-42010a140053","84b457e6-05c9-11ea-818a-42010a140053","84b457e6-05c9-11ea-818a-42010a140053","84b457e6-05c9-11ea-818a-42010a140053","84b457e6-05c9-11ea-818a-42010a140053","84b457e6-05c9-11ea-818a-42010a140053","84b457e6-05c9-11ea-818a-42010a140053","84b46cae-05c9-11ea-818a-42010a140053","84b480f4-05c9-11ea-818a-42010a140053","84b495a8-05c9-11ea-818a-42010a140053","84bdb9da-05c9-11ea-818a-42010a140053","84b77570-05c9-11ea-818a-42010a140053","84b69d62-05c9-11ea-818a-42010a140053","84b74d02-05c9-11ea-818a-42010a140053","84b6b3b0-05c9-11ea-818a-42010a140053","84b73736-05c9-11ea-818a-42010a140053","84b6c846-05c9-11ea-818a-42010a140053","84b73736-05c9-11ea-818a-42010a140053","84b6dd5e-05c9-11ea-818a-42010a140053","84b73736-05c9-11ea-818a-42010a140053","84b6f226-05c9-11ea-818a-42010a140053","84b73736-05c9-11ea-818a-42010a140053","84b70c48-05c9-11ea-818a-42010a140053","84b73736-05c9-11ea-818a-42010a140053","84b7230e-05c9-11ea-818a-42010a140053","84b73736-05c9-11ea-818a-42010a140053","84b74d02-05c9-11ea-818a-42010a140053","84b77570-05c9-11ea-818a-42010a140053","84b78d58-05c9-11ea-818a-42010a140053","84b855b2-05c9-11ea-818a-42010a140053","84b82506-05c9-11ea-818a-42010a140053","84b82506-05c9-11ea-818a-42010a140053","84b82506-05c9-11ea-818a-42010a140053","84b82506-05c9-11ea-818a-42010a140053","84b82506-05c9-11ea-818a-42010a140053","84b82506-05c9-11ea-818a-42010a140053","84b83fd2-05c9-11ea-818a-42010a140053","84b855b2-05c9-11ea-818a-42010a140053","84b86958-05c9-11ea-818a-42010a140053","84bdb9da-05c9-11ea-818a-42010a140053","84ba40ac-05c9-11ea-818a-42010a140053","84b95552-05c9-11ea-818a-42010a140053","84ba11ea-05c9-11ea-818a-42010a140053","84b96c36-05c9-11ea-818a-42010a140053","84b9f6e2-05c9-11ea-818a-42010a140053","84b98856-05c9-11ea-818a-42010a140053","84b9f6e2-05c9-11ea-818a-42010a140053","84b9a142-05c9-11ea-818a-42010a140053","84b9f6e2-05c9-11ea-818a-42010a140053","84b9b8f8-05c9-11ea-818a-42010a140053","84b9f6e2-05c9-11ea-818a-42010a140053","84b9cdfc-05c9-11ea-818a-42010a140053","84b9f6e2-05c9-11ea-818a-42010a140053","84b9e2c4-05c9-11ea-818a-42010a140053","84b9f6e2-05c9-11ea-818a-42010a140053","84ba11ea-05c9-11ea-818a-42010a140053","84ba40ac-05c9-11ea-818a-42010a140053","84ba548e-05c9-11ea-818a-42010a140053","84bb13f6-05c9-11ea-818a-42010a140053","84baea2a-05c9-11ea-818a-42010a140053","84baea2a-05c9-11ea-818a-42010a140053","84baea2a-05c9-11ea-818a-42010a140053","84baea2a-05c9-11ea-818a-42010a140053","84baea2a-05c9-11ea-818a-42010a140053","84baea2a-05c9-11ea-818a-42010a140053","84bafede-05c9-11ea-818a-42010a140053","84bb13f6-05c9-11ea-818a-42010a140053","84bb2756-05c9-11ea-818a-42010a140053","84bdb9da-05c9-11ea-818a-42010a140053","84bcc462-05c9-11ea-818a-42010a140053","84bbf500-05c9-11ea-818a-42010a140053","84bc9d02-05c9-11ea-818a-42010a140053","84bc0a5e-05c9-11ea-818a-42010a140053","84bc8790-05c9-11ea-818a-42010a140053","84bc1f1c-05c9-11ea-818a-42010a140053","84bc8790-05c9-11ea-818a-42010a140053","84bc3402-05c9-11ea-818a-42010a140053","84bc8790-05c9-11ea-818a-42010a140053","84bc4816-05c9-11ea-818a-42010a140053","84bc8790-05c9-11ea-818a-42010a140053","84bc5d38-05c9-11ea-818a-42010a140053","84bc8790-05c9-11ea-818a-42010a140053","84bc7200-05c9-11ea-818a-42010a140053","84bc8790-05c9-11ea-818a-42010a140053","84bc9d02-05c9-11ea-818a-42010a140053","84bcc462-05c9-11ea-818a-42010a140053","84bcd790-05c9-11ea-818a-42010a140053","84bd90f4-05c9-11ea-818a-42010a140053","84bd684a-05c9-11ea-818a-42010a140053","84bd684a-05c9-11ea-818a-42010a140053","84bd684a-05c9-11ea-818a-42010a140053","84bd684a-05c9-11ea-818a-42010a140053","84bd684a-05c9-11ea-818a-42010a140053","84bd684a-05c9-11ea-818a-42010a140053","84bd7ccc-05c9-11ea-818a-42010a140053","84bd90f4-05c9-11ea-818a-42010a140053","84bda436-05c9-11ea-818a-42010a140053","84bdb9da-05c9-11ea-818a-42010a140053","84bdd0a0-05c9-11ea-818a-42010a140053","84bde48c-05c9-11ea-818a-42010a140053","84be232a-05c9-11ea-818a-42010a140053","84bdfa1c-05c9-11ea-818a-42010a140053","84be232a-05c9-11ea-818a-42010a140053","84be0e44-05c9-11ea-818a-42010a140053","84be232a-05c9-11ea-818a-42010a140053","84be36da-05c9-11ea-818a-42010a140053"],"label":["","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot"},"manipulation":{"enabled":false},"edges":{"arrows":"to"},"layout":{"hierarchical":{"enabled":true,"levelSeparation":500,"nodeSpacing":200,"direction":"RL"}},"groups":{"useDefaultGroups":true,"none":{"color":{"border":"black","background":"white"}}}},"groups":["none"],"width":"100%","height":"400px","idselection":{"enabled":false},"byselection":{"enabled":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)"},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-62a347e481e519ec0e19">{"x":{"nodes":{"id":["c6c506c8-0644-11ea-93a6-42010a140200","c6c4f1f6-0644-11ea-93a6-42010a140200","c6c4b13c-0644-11ea-93a6-42010a140200","c6c49be8-0644-11ea-93a6-42010a140200","c698293c-0644-11ea-93a6-42010a140200","c698153c-0644-11ea-93a6-42010a140200","c697587c-0644-11ea-93a6-42010a140200","c697456c-0644-11ea-93a6-42010a140200","c69652ce-0644-11ea-93a6-42010a140200","c6971c9a-0644-11ea-93a6-42010a140200","c6966b24-0644-11ea-93a6-42010a140200","c697062e-0644-11ea-93a6-42010a140200","c696844c-0644-11ea-93a6-42010a140200","c6969a54-0644-11ea-93a6-42010a140200","c696b034-0644-11ea-93a6-42010a140200","c696c542-0644-11ea-93a6-42010a140200","c696d9d8-0644-11ea-93a6-42010a140200","c696ef40-0644-11ea-93a6-42010a140200","c69801aa-0644-11ea-93a6-42010a140200","c697ecce-0644-11ea-93a6-42010a140200","c6977226-0644-11ea-93a6-42010a140200","c6978612-0644-11ea-93a6-42010a140200","c6979986-0644-11ea-93a6-42010a140200","c697b0ce-0644-11ea-93a6-42010a140200","c697c49c-0644-11ea-93a6-42010a140200","c697d93c-0644-11ea-93a6-42010a140200","c6c48450-0644-11ea-93a6-42010a140200","c6aba728-0644-11ea-93a6-42010a140200","c6ab938c-0644-11ea-93a6-42010a140200","c6aad316-0644-11ea-93a6-42010a140200","c6aabf3e-0644-11ea-93a6-42010a140200","c6a9d1b4-0644-11ea-93a6-42010a140200","c6aa96b2-0644-11ea-93a6-42010a140200","c6a9e802-0644-11ea-93a6-42010a140200","c6aa7fce-0644-11ea-93a6-42010a140200","c6aa0008-0644-11ea-93a6-42010a140200","c6aa1552-0644-11ea-93a6-42010a140200","c6aa2b5a-0644-11ea-93a6-42010a140200","c6aa4022-0644-11ea-93a6-42010a140200","c6aa5544-0644-11ea-93a6-42010a140200","c6aa6a0c-0644-11ea-93a6-42010a140200","c6ab7ec4-0644-11ea-93a6-42010a140200","c6ab686c-0644-11ea-93a6-42010a140200","c6aaecca-0644-11ea-93a6-42010a140200","c6ab0106-0644-11ea-93a6-42010a140200","c6ab154c-0644-11ea-93a6-42010a140200","c6ab2a64-0644-11ea-93a6-42010a140200","c6ab3efa-0644-11ea-93a6-42010a140200","c6ab5386-0644-11ea-93a6-42010a140200","c6ae3948-0644-11ea-93a6-42010a140200","c6ae24d0-0644-11ea-93a6-42010a140200","c6ad6aea-0644-11ea-93a6-42010a140200","c6ad56ea-0644-11ea-93a6-42010a140200","c6ac6af0-0644-11ea-93a6-42010a140200","c6ad2a1c-0644-11ea-93a6-42010a140200","c6ac7f04-0644-11ea-93a6-42010a140200","c6ad1572-0644-11ea-93a6-42010a140200","c6ac9534-0644-11ea-93a6-42010a140200","c6acaa88-0644-11ea-93a6-42010a140200","c6acbf8c-0644-11ea-93a6-42010a140200","c6acd53a-0644-11ea-93a6-42010a140200","c6aceade-0644-11ea-93a6-42010a140200","c6ad00dc-0644-11ea-93a6-42010a140200","c6ae1076-0644-11ea-93a6-42010a140200","c6adfbcc-0644-11ea-93a6-42010a140200","c6ad84da-0644-11ea-93a6-42010a140200","c6ad99ca-0644-11ea-93a6-42010a140200","c6adadfc-0644-11ea-93a6-42010a140200","c6adc13e-0644-11ea-93a6-42010a140200","c6add502-0644-11ea-93a6-42010a140200","c6ade858-0644-11ea-93a6-42010a140200","c6b0ca1e-0644-11ea-93a6-42010a140200","c6b0b664-0644-11ea-93a6-42010a140200","c6aff3aa-0644-11ea-93a6-42010a140200","c6afdfb4-0644-11ea-93a6-42010a140200","c6aef748-0644-11ea-93a6-42010a140200","c6afb7f0-0644-11ea-93a6-42010a140200","c6af0b7a-0644-11ea-93a6-42010a140200","c6afa2c4-0644-11ea-93a6-42010a140200","c6af21aa-0644-11ea-93a6-42010a140200","c6af379e-0644-11ea-93a6-42010a140200","c6af4c7a-0644-11ea-93a6-42010a140200","c6af61ce-0644-11ea-93a6-42010a140200","c6af7880-0644-11ea-93a6-42010a140200","c6af8d70-0644-11ea-93a6-42010a140200","c6b09f9e-0644-11ea-93a6-42010a140200","c6b0893c-0644-11ea-93a6-42010a140200","c6b00e62-0644-11ea-93a6-42010a140200","c6b02370-0644-11ea-93a6-42010a140200","c6b03766-0644-11ea-93a6-42010a140200","c6b04cc4-0644-11ea-93a6-42010a140200","c6b06182-0644-11ea-93a6-42010a140200","c6b0755a-0644-11ea-93a6-42010a140200","c6b3626a-0644-11ea-93a6-42010a140200","c6b34e7e-0644-11ea-93a6-42010a140200","c6b28e3a-0644-11ea-93a6-42010a140200","c6b276ac-0644-11ea-93a6-42010a140200","c6b188b4-0644-11ea-93a6-42010a140200","c6b2497a-0644-11ea-93a6-42010a140200","c6b19caa-0644-11ea-93a6-42010a140200","c6b2326e-0644-11ea-93a6-42010a140200","c6b1b28a-0644-11ea-93a6-42010a140200","c6b1c82e-0644-11ea-93a6-42010a140200","c6b1de18-0644-11ea-93a6-42010a140200","c6b1f394-0644-11ea-93a6-42010a140200","c6b2082a-0644-11ea-93a6-42010a140200","c6b21df6-0644-11ea-93a6-42010a140200","c6b338bc-0644-11ea-93a6-42010a140200","c6b3234a-0644-11ea-93a6-42010a140200","c6b2a80c-0644-11ea-93a6-42010a140200","c6b2bcca-0644-11ea-93a6-42010a140200","c6b2d0de-0644-11ea-93a6-42010a140200","c6b2e4fc-0644-11ea-93a6-42010a140200","c6b2f94c-0644-11ea-93a6-42010a140200","c6b30da6-0644-11ea-93a6-42010a140200","c6b60c4a-0644-11ea-93a6-42010a140200","c6b5f7e6-0644-11ea-93a6-42010a140200","c6b5346e-0644-11ea-93a6-42010a140200","c6b51f10-0644-11ea-93a6-42010a140200","c6b42916-0644-11ea-93a6-42010a140200","c6b4f08a-0644-11ea-93a6-42010a140200","c6b43f1e-0644-11ea-93a6-42010a140200","c6b4d9ec-0644-11ea-93a6-42010a140200","c6b457b0-0644-11ea-93a6-42010a140200","c6b46e6c-0644-11ea-93a6-42010a140200","c6b483d4-0644-11ea-93a6-42010a140200","c6b499dc-0644-11ea-93a6-42010a140200","c6b4b016-0644-11ea-93a6-42010a140200","c6b4c4fc-0644-11ea-93a6-42010a140200","c6b5e3aa-0644-11ea-93a6-42010a140200","c6b5ce1a-0644-11ea-93a6-42010a140200","c6b54f30-0644-11ea-93a6-42010a140200","c6b56326-0644-11ea-93a6-42010a140200","c6b57906-0644-11ea-93a6-42010a140200","c6b590bc-0644-11ea-93a6-42010a140200","c6b5a5a2-0644-11ea-93a6-42010a140200","c6b5ba38-0644-11ea-93a6-42010a140200","c6b8ac48-0644-11ea-93a6-42010a140200","c6b8982a-0644-11ea-93a6-42010a140200","c6b7d368-0644-11ea-93a6-42010a140200","c6b7bffe-0644-11ea-93a6-42010a140200","c6b6d1d4-0644-11ea-93a6-42010a140200","c6b79722-0644-11ea-93a6-42010a140200","c6b6e6a6-0644-11ea-93a6-42010a140200","c6b78142-0644-11ea-93a6-42010a140200","c6b6fdda-0644-11ea-93a6-42010a140200","c6b71356-0644-11ea-93a6-42010a140200","c6b7290e-0644-11ea-93a6-42010a140200","c6b73e4e-0644-11ea-93a6-42010a140200","c6b753c0-0644-11ea-93a6-42010a140200","c6b76c5c-0644-11ea-93a6-42010a140200","c6b8820e-0644-11ea-93a6-42010a140200","c6b86c4c-0644-11ea-93a6-42010a140200","c6b7ed80-0644-11ea-93a6-42010a140200","c6b805a4-0644-11ea-93a6-42010a140200","c6b81ae4-0644-11ea-93a6-42010a140200","c6b82f7a-0644-11ea-93a6-42010a140200","c6b844ba-0644-11ea-93a6-42010a140200","c6b858ec-0644-11ea-93a6-42010a140200","c6bb4552-0644-11ea-93a6-42010a140200","c6bb3062-0644-11ea-93a6-42010a140200","c6ba71a4-0644-11ea-93a6-42010a140200","c6ba5bec-0644-11ea-93a6-42010a140200","c6b97178-0644-11ea-93a6-42010a140200","c6ba336a-0644-11ea-93a6-42010a140200","c6b98604-0644-11ea-93a6-42010a140200","c6ba1de4-0644-11ea-93a6-42010a140200","c6b99c66-0644-11ea-93a6-42010a140200","c6b9b1ec-0644-11ea-93a6-42010a140200","c6b9c808-0644-11ea-93a6-42010a140200","c6b9df5a-0644-11ea-93a6-42010a140200","c6b9f436-0644-11ea-93a6-42010a140200","c6ba09b2-0644-11ea-93a6-42010a140200","c6bb1bf4-0644-11ea-93a6-42010a140200","c6bb05ce-0644-11ea-93a6-42010a140200","c6ba8b76-0644-11ea-93a6-42010a140200","c6baa02a-0644-11ea-93a6-42010a140200","c6bab43e-0644-11ea-93a6-42010a140200","c6bac87a-0644-11ea-93a6-42010a140200","c6badca2-0644-11ea-93a6-42010a140200","c6baf106-0644-11ea-93a6-42010a140200","c6bf3176-0644-11ea-93a6-42010a140200","c6bf1e70-0644-11ea-93a6-42010a140200","c6be6520-0644-11ea-93a6-42010a140200","c6be5210-0644-11ea-93a6-42010a140200","c6bd6346-0644-11ea-93a6-42010a140200","c6be29de-0644-11ea-93a6-42010a140200","c6bd79c6-0644-11ea-93a6-42010a140200","c6be13cc-0644-11ea-93a6-42010a140200","c6bd9064-0644-11ea-93a6-42010a140200","c6bda950-0644-11ea-93a6-42010a140200","c6bdc070-0644-11ea-93a6-42010a140200","c6bdd628-0644-11ea-93a6-42010a140200","c6bdea82-0644-11ea-93a6-42010a140200","c6bdfef0-0644-11ea-93a6-42010a140200","c6bf0ac0-0644-11ea-93a6-42010a140200","c6bef38c-0644-11ea-93a6-42010a140200","c6be7e7a-0644-11ea-93a6-42010a140200","c6be922a-0644-11ea-93a6-42010a140200","c6bea544-0644-11ea-93a6-42010a140200","c6beb9da-0644-11ea-93a6-42010a140200","c6becd44-0644-11ea-93a6-42010a140200","c6bee07c-0644-11ea-93a6-42010a140200","c6c1dc0a-0644-11ea-93a6-42010a140200","c6c1c7ec-0644-11ea-93a6-42010a140200","c6c0f18c-0644-11ea-93a6-42010a140200","c6c0dda0-0644-11ea-93a6-42010a140200","c6bff07a-0644-11ea-93a6-42010a140200","c6c0b15e-0644-11ea-93a6-42010a140200","c6c003bc-0644-11ea-93a6-42010a140200","c6c09c32-0644-11ea-93a6-42010a140200","c6c01884-0644-11ea-93a6-42010a140200","c6c02d60-0644-11ea-93a6-42010a140200","c6c04336-0644-11ea-93a6-42010a140200","c6c059ac-0644-11ea-93a6-42010a140200","c6c06f32-0644-11ea-93a6-42010a140200","c6c0867a-0644-11ea-93a6-42010a140200","c6c1b1bc-0644-11ea-93a6-42010a140200","c6c19be6-0644-11ea-93a6-42010a140200","c6c10bf4-0644-11ea-93a6-42010a140200","c6c121b6-0644-11ea-93a6-42010a140200","c6c13656-0644-11ea-93a6-42010a140200","c6c14a88-0644-11ea-93a6-42010a140200","c6c16a36-0644-11ea-93a6-42010a140200","c6c1878c-0644-11ea-93a6-42010a140200","c6c46f60-0644-11ea-93a6-42010a140200","c6c45a48-0644-11ea-93a6-42010a140200","c6c39bb2-0644-11ea-93a6-42010a140200","c6c38622-0644-11ea-93a6-42010a140200","c6c29b4a-0644-11ea-93a6-42010a140200","c6c35cf6-0644-11ea-93a6-42010a140200","c6c2af5e-0644-11ea-93a6-42010a140200","c6c3473e-0644-11ea-93a6-42010a140200","c6c2c52a-0644-11ea-93a6-42010a140200","c6c2daa6-0644-11ea-93a6-42010a140200","c6c2f0d6-0644-11ea-93a6-42010a140200","c6c30846-0644-11ea-93a6-42010a140200","c6c31d86-0644-11ea-93a6-42010a140200","c6c332c6-0644-11ea-93a6-42010a140200","c6c4460c-0644-11ea-93a6-42010a140200","c6c43004-0644-11ea-93a6-42010a140200","c6c3b566-0644-11ea-93a6-42010a140200","c6c3ca1a-0644-11ea-93a6-42010a140200","c6c3de60-0644-11ea-93a6-42010a140200","c6c3f350-0644-11ea-93a6-42010a140200","c6c40714-0644-11ea-93a6-42010a140200","c6c41b78-0644-11ea-93a6-42010a140200","c6c4c6f4-0644-11ea-93a6-42010a140200","c6c4dcf2-0644-11ea-93a6-42010a140200"],"label":["CV_","bundle","CV_Stack","bundle","Stack","bundle","Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP->Stack)","bundle","Lrnr_pkg_SuperLearner_screener_screen.corP","Stack","chain","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","bundle","Stack","bundle","Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP->Stack)","bundle","Lrnr_pkg_SuperLearner_screener_screen.corP","Stack","chain","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP->Stack)","bundle","Lrnr_pkg_SuperLearner_screener_screen.corP","Stack","chain","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP->Stack)","bundle","Lrnr_pkg_SuperLearner_screener_screen.corP","Stack","chain","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP->Stack)","bundle","Lrnr_pkg_SuperLearner_screener_screen.corP","Stack","chain","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP->Stack)","bundle","Lrnr_pkg_SuperLearner_screener_screen.corP","Stack","chain","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP->Stack)","bundle","Lrnr_pkg_SuperLearner_screener_screen.corP","Stack","chain","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP->Stack)","bundle","Lrnr_pkg_SuperLearner_screener_screen.corP","Stack","chain","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP->Stack)","bundle","Lrnr_pkg_SuperLearner_screener_screen.corP","Stack","chain","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP->Stack)","bundle","Lrnr_pkg_SuperLearner_screener_screen.corP","Stack","chain","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP->Stack)","bundle","Lrnr_pkg_SuperLearner_screener_screen.corP","Stack","chain","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","Stack","bundle","Lrnr_glm_TRUE","Lrnr_mean","Lrnr_ranger_100_TRUE_1","Lrnr_glmnet_NULL_deviance_10_1_100_TRUE","Lrnr_pkg_SuperLearner_SL.gam","Lrnr_pkg_SuperLearner_SL.bayesglm","chain","Lrnr_nnls"],"level":[1,2,5,6,7,8,9,10,15,11,14,12,13,13,13,13,13,13,9,10,11,11,11,11,11,11,7,8,9,10,11,16,12,15,13,14,14,14,14,14,14,10,11,12,12,12,12,12,12,8,9,10,11,16,12,15,13,14,14,14,14,14,14,10,11,12,12,12,12,12,12,8,9,10,11,16,12,15,13,14,14,14,14,14,14,10,11,12,12,12,12,12,12,8,9,10,11,16,12,15,13,14,14,14,14,14,14,10,11,12,12,12,12,12,12,8,9,10,11,16,12,15,13,14,14,14,14,14,14,10,11,12,12,12,12,12,12,8,9,10,11,16,12,15,13,14,14,14,14,14,14,10,11,12,12,12,12,12,12,8,9,10,11,16,12,15,13,14,14,14,14,14,14,10,11,12,12,12,12,12,12,8,9,10,11,16,12,15,13,14,14,14,14,14,14,10,11,12,12,12,12,12,12,8,9,10,11,16,12,15,13,14,14,14,14,14,14,10,11,12,12,12,12,12,12,8,9,10,11,16,12,15,13,14,14,14,14,14,14,10,11,12,12,12,12,12,12,4,3],"sequential":[true,true,true,true,true,true,true,true,false,true,true,true,false,false,false,false,false,false,true,true,false,false,false,false,false,false,true,true,true,true,true,false,true,true,true,false,false,false,false,false,false,true,true,false,false,false,false,false,false,true,true,true,true,false,true,true,true,false,false,false,false,false,false,true,true,false,false,false,false,false,false,true,true,true,true,false,true,true,true,false,false,false,false,false,false,true,true,false,false,false,false,false,false,true,true,true,true,false,true,true,true,false,false,false,false,false,false,true,true,false,false,false,false,false,false,true,true,true,true,false,true,true,true,false,false,false,false,false,false,true,true,false,false,false,false,false,false,true,true,true,true,false,true,true,true,false,false,false,false,false,false,true,true,false,false,false,false,false,false,true,true,true,true,false,true,true,true,false,false,false,false,false,false,true,true,false,false,false,false,false,false,true,true,true,true,false,true,true,true,false,false,false,false,false,false,true,true,false,false,false,false,false,false,true,true,true,true,false,true,true,true,false,false,false,false,false,false,true,true,false,false,false,false,false,false,true,true,true,true,false,true,true,true,false,false,false,false,false,false,true,true,false,false,false,false,false,false,true,false],"state":["waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","ready","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","ready","ready","ready","ready","ready","ready","waiting","waiting","waiting","waiting","waiting","ready","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","ready","ready","ready","ready","ready","ready","waiting","waiting","waiting","waiting","ready","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","ready","ready","ready","ready","ready","ready","waiting","waiting","waiting","waiting","ready","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","ready","ready","ready","ready","ready","ready","waiting","waiting","waiting","waiting","ready","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","ready","ready","ready","ready","ready","ready","waiting","waiting","waiting","waiting","ready","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","ready","ready","ready","ready","ready","ready","waiting","waiting","waiting","waiting","ready","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","ready","ready","ready","ready","ready","ready","waiting","waiting","waiting","waiting","ready","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","ready","ready","ready","ready","ready","ready","waiting","waiting","waiting","waiting","ready","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","ready","ready","ready","ready","ready","ready","waiting","waiting","waiting","waiting","ready","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","ready","ready","ready","ready","ready","ready","waiting","waiting","waiting","waiting","ready","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","waiting","ready","ready","ready","ready","ready","ready","waiting","waiting"],"group":["none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none"]},"edges":{"from":["c69652ce-0644-11ea-93a6-42010a140200","c69652ce-0644-11ea-93a6-42010a140200","c6966b24-0644-11ea-93a6-42010a140200","c6966b24-0644-11ea-93a6-42010a140200","c696844c-0644-11ea-93a6-42010a140200","c6966b24-0644-11ea-93a6-42010a140200","c6969a54-0644-11ea-93a6-42010a140200","c6966b24-0644-11ea-93a6-42010a140200","c696b034-0644-11ea-93a6-42010a140200","c6966b24-0644-11ea-93a6-42010a140200","c696c542-0644-11ea-93a6-42010a140200","c6966b24-0644-11ea-93a6-42010a140200","c696d9d8-0644-11ea-93a6-42010a140200","c6966b24-0644-11ea-93a6-42010a140200","c696ef40-0644-11ea-93a6-42010a140200","c697062e-0644-11ea-93a6-42010a140200","c6971c9a-0644-11ea-93a6-42010a140200","c697456c-0644-11ea-93a6-42010a140200","c697587c-0644-11ea-93a6-42010a140200","c6977226-0644-11ea-93a6-42010a140200","c6978612-0644-11ea-93a6-42010a140200","c6979986-0644-11ea-93a6-42010a140200","c697b0ce-0644-11ea-93a6-42010a140200","c697c49c-0644-11ea-93a6-42010a140200","c697d93c-0644-11ea-93a6-42010a140200","c697ecce-0644-11ea-93a6-42010a140200","c69801aa-0644-11ea-93a6-42010a140200","c698153c-0644-11ea-93a6-42010a140200","c698293c-0644-11ea-93a6-42010a140200","c6a9d1b4-0644-11ea-93a6-42010a140200","c6a9d1b4-0644-11ea-93a6-42010a140200","c6a9e802-0644-11ea-93a6-42010a140200","c6a9e802-0644-11ea-93a6-42010a140200","c6aa0008-0644-11ea-93a6-42010a140200","c6a9e802-0644-11ea-93a6-42010a140200","c6aa1552-0644-11ea-93a6-42010a140200","c6a9e802-0644-11ea-93a6-42010a140200","c6aa2b5a-0644-11ea-93a6-42010a140200","c6a9e802-0644-11ea-93a6-42010a140200","c6aa4022-0644-11ea-93a6-42010a140200","c6a9e802-0644-11ea-93a6-42010a140200","c6aa5544-0644-11ea-93a6-42010a140200","c6a9e802-0644-11ea-93a6-42010a140200","c6aa6a0c-0644-11ea-93a6-42010a140200","c6aa7fce-0644-11ea-93a6-42010a140200","c6aa96b2-0644-11ea-93a6-42010a140200","c6aabf3e-0644-11ea-93a6-42010a140200","c6aad316-0644-11ea-93a6-42010a140200","c6aaecca-0644-11ea-93a6-42010a140200","c6ab0106-0644-11ea-93a6-42010a140200","c6ab154c-0644-11ea-93a6-42010a140200","c6ab2a64-0644-11ea-93a6-42010a140200","c6ab3efa-0644-11ea-93a6-42010a140200","c6ab5386-0644-11ea-93a6-42010a140200","c6ab686c-0644-11ea-93a6-42010a140200","c6ab7ec4-0644-11ea-93a6-42010a140200","c6ab938c-0644-11ea-93a6-42010a140200","c6aba728-0644-11ea-93a6-42010a140200","c6ac6af0-0644-11ea-93a6-42010a140200","c6ac6af0-0644-11ea-93a6-42010a140200","c6ac7f04-0644-11ea-93a6-42010a140200","c6ac7f04-0644-11ea-93a6-42010a140200","c6ac9534-0644-11ea-93a6-42010a140200","c6ac7f04-0644-11ea-93a6-42010a140200","c6acaa88-0644-11ea-93a6-42010a140200","c6ac7f04-0644-11ea-93a6-42010a140200","c6acbf8c-0644-11ea-93a6-42010a140200","c6ac7f04-0644-11ea-93a6-42010a140200","c6acd53a-0644-11ea-93a6-42010a140200","c6ac7f04-0644-11ea-93a6-42010a140200","c6aceade-0644-11ea-93a6-42010a140200","c6ac7f04-0644-11ea-93a6-42010a140200","c6ad00dc-0644-11ea-93a6-42010a140200","c6ad1572-0644-11ea-93a6-42010a140200","c6ad2a1c-0644-11ea-93a6-42010a140200","c6ad56ea-0644-11ea-93a6-42010a140200","c6ad6aea-0644-11ea-93a6-42010a140200","c6ad84da-0644-11ea-93a6-42010a140200","c6ad99ca-0644-11ea-93a6-42010a140200","c6adadfc-0644-11ea-93a6-42010a140200","c6adc13e-0644-11ea-93a6-42010a140200","c6add502-0644-11ea-93a6-42010a140200","c6ade858-0644-11ea-93a6-42010a140200","c6adfbcc-0644-11ea-93a6-42010a140200","c6ae1076-0644-11ea-93a6-42010a140200","c6ae24d0-0644-11ea-93a6-42010a140200","c6ae3948-0644-11ea-93a6-42010a140200","c6aef748-0644-11ea-93a6-42010a140200","c6aef748-0644-11ea-93a6-42010a140200","c6af0b7a-0644-11ea-93a6-42010a140200","c6af0b7a-0644-11ea-93a6-42010a140200","c6af21aa-0644-11ea-93a6-42010a140200","c6af0b7a-0644-11ea-93a6-42010a140200","c6af379e-0644-11ea-93a6-42010a140200","c6af0b7a-0644-11ea-93a6-42010a140200","c6af4c7a-0644-11ea-93a6-42010a140200","c6af0b7a-0644-11ea-93a6-42010a140200","c6af61ce-0644-11ea-93a6-42010a140200","c6af0b7a-0644-11ea-93a6-42010a140200","c6af7880-0644-11ea-93a6-42010a140200","c6af0b7a-0644-11ea-93a6-42010a140200","c6af8d70-0644-11ea-93a6-42010a140200","c6afa2c4-0644-11ea-93a6-42010a140200","c6afb7f0-0644-11ea-93a6-42010a140200","c6afdfb4-0644-11ea-93a6-42010a140200","c6aff3aa-0644-11ea-93a6-42010a140200","c6b00e62-0644-11ea-93a6-42010a140200","c6b02370-0644-11ea-93a6-42010a140200","c6b03766-0644-11ea-93a6-42010a140200","c6b04cc4-0644-11ea-93a6-42010a140200","c6b06182-0644-11ea-93a6-42010a140200","c6b0755a-0644-11ea-93a6-42010a140200","c6b0893c-0644-11ea-93a6-42010a140200","c6b09f9e-0644-11ea-93a6-42010a140200","c6b0b664-0644-11ea-93a6-42010a140200","c6b0ca1e-0644-11ea-93a6-42010a140200","c6b188b4-0644-11ea-93a6-42010a140200","c6b188b4-0644-11ea-93a6-42010a140200","c6b19caa-0644-11ea-93a6-42010a140200","c6b19caa-0644-11ea-93a6-42010a140200","c6b1b28a-0644-11ea-93a6-42010a140200","c6b19caa-0644-11ea-93a6-42010a140200","c6b1c82e-0644-11ea-93a6-42010a140200","c6b19caa-0644-11ea-93a6-42010a140200","c6b1de18-0644-11ea-93a6-42010a140200","c6b19caa-0644-11ea-93a6-42010a140200","c6b1f394-0644-11ea-93a6-42010a140200","c6b19caa-0644-11ea-93a6-42010a140200","c6b2082a-0644-11ea-93a6-42010a140200","c6b19caa-0644-11ea-93a6-42010a140200","c6b21df6-0644-11ea-93a6-42010a140200","c6b2326e-0644-11ea-93a6-42010a140200","c6b2497a-0644-11ea-93a6-42010a140200","c6b276ac-0644-11ea-93a6-42010a140200","c6b28e3a-0644-11ea-93a6-42010a140200","c6b2a80c-0644-11ea-93a6-42010a140200","c6b2bcca-0644-11ea-93a6-42010a140200","c6b2d0de-0644-11ea-93a6-42010a140200","c6b2e4fc-0644-11ea-93a6-42010a140200","c6b2f94c-0644-11ea-93a6-42010a140200","c6b30da6-0644-11ea-93a6-42010a140200","c6b3234a-0644-11ea-93a6-42010a140200","c6b338bc-0644-11ea-93a6-42010a140200","c6b34e7e-0644-11ea-93a6-42010a140200","c6b3626a-0644-11ea-93a6-42010a140200","c6b42916-0644-11ea-93a6-42010a140200","c6b42916-0644-11ea-93a6-42010a140200","c6b43f1e-0644-11ea-93a6-42010a140200","c6b43f1e-0644-11ea-93a6-42010a140200","c6b457b0-0644-11ea-93a6-42010a140200","c6b43f1e-0644-11ea-93a6-42010a140200","c6b46e6c-0644-11ea-93a6-42010a140200","c6b43f1e-0644-11ea-93a6-42010a140200","c6b483d4-0644-11ea-93a6-42010a140200","c6b43f1e-0644-11ea-93a6-42010a140200","c6b499dc-0644-11ea-93a6-42010a140200","c6b43f1e-0644-11ea-93a6-42010a140200","c6b4b016-0644-11ea-93a6-42010a140200","c6b43f1e-0644-11ea-93a6-42010a140200","c6b4c4fc-0644-11ea-93a6-42010a140200","c6b4d9ec-0644-11ea-93a6-42010a140200","c6b4f08a-0644-11ea-93a6-42010a140200","c6b51f10-0644-11ea-93a6-42010a140200","c6b5346e-0644-11ea-93a6-42010a140200","c6b54f30-0644-11ea-93a6-42010a140200","c6b56326-0644-11ea-93a6-42010a140200","c6b57906-0644-11ea-93a6-42010a140200","c6b590bc-0644-11ea-93a6-42010a140200","c6b5a5a2-0644-11ea-93a6-42010a140200","c6b5ba38-0644-11ea-93a6-42010a140200","c6b5ce1a-0644-11ea-93a6-42010a140200","c6b5e3aa-0644-11ea-93a6-42010a140200","c6b5f7e6-0644-11ea-93a6-42010a140200","c6b60c4a-0644-11ea-93a6-42010a140200","c6b6d1d4-0644-11ea-93a6-42010a140200","c6b6d1d4-0644-11ea-93a6-42010a140200","c6b6e6a6-0644-11ea-93a6-42010a140200","c6b6e6a6-0644-11ea-93a6-42010a140200","c6b6fdda-0644-11ea-93a6-42010a140200","c6b6e6a6-0644-11ea-93a6-42010a140200","c6b71356-0644-11ea-93a6-42010a140200","c6b6e6a6-0644-11ea-93a6-42010a140200","c6b7290e-0644-11ea-93a6-42010a140200","c6b6e6a6-0644-11ea-93a6-42010a140200","c6b73e4e-0644-11ea-93a6-42010a140200","c6b6e6a6-0644-11ea-93a6-42010a140200","c6b753c0-0644-11ea-93a6-42010a140200","c6b6e6a6-0644-11ea-93a6-42010a140200","c6b76c5c-0644-11ea-93a6-42010a140200","c6b78142-0644-11ea-93a6-42010a140200","c6b79722-0644-11ea-93a6-42010a140200","c6b7bffe-0644-11ea-93a6-42010a140200","c6b7d368-0644-11ea-93a6-42010a140200","c6b7ed80-0644-11ea-93a6-42010a140200","c6b805a4-0644-11ea-93a6-42010a140200","c6b81ae4-0644-11ea-93a6-42010a140200","c6b82f7a-0644-11ea-93a6-42010a140200","c6b844ba-0644-11ea-93a6-42010a140200","c6b858ec-0644-11ea-93a6-42010a140200","c6b86c4c-0644-11ea-93a6-42010a140200","c6b8820e-0644-11ea-93a6-42010a140200","c6b8982a-0644-11ea-93a6-42010a140200","c6b8ac48-0644-11ea-93a6-42010a140200","c6b97178-0644-11ea-93a6-42010a140200","c6b97178-0644-11ea-93a6-42010a140200","c6b98604-0644-11ea-93a6-42010a140200","c6b98604-0644-11ea-93a6-42010a140200","c6b99c66-0644-11ea-93a6-42010a140200","c6b98604-0644-11ea-93a6-42010a140200","c6b9b1ec-0644-11ea-93a6-42010a140200","c6b98604-0644-11ea-93a6-42010a140200","c6b9c808-0644-11ea-93a6-42010a140200","c6b98604-0644-11ea-93a6-42010a140200","c6b9df5a-0644-11ea-93a6-42010a140200","c6b98604-0644-11ea-93a6-42010a140200","c6b9f436-0644-11ea-93a6-42010a140200","c6b98604-0644-11ea-93a6-42010a140200","c6ba09b2-0644-11ea-93a6-42010a140200","c6ba1de4-0644-11ea-93a6-42010a140200","c6ba336a-0644-11ea-93a6-42010a140200","c6ba5bec-0644-11ea-93a6-42010a140200","c6ba71a4-0644-11ea-93a6-42010a140200","c6ba8b76-0644-11ea-93a6-42010a140200","c6baa02a-0644-11ea-93a6-42010a140200","c6bab43e-0644-11ea-93a6-42010a140200","c6bac87a-0644-11ea-93a6-42010a140200","c6badca2-0644-11ea-93a6-42010a140200","c6baf106-0644-11ea-93a6-42010a140200","c6bb05ce-0644-11ea-93a6-42010a140200","c6bb1bf4-0644-11ea-93a6-42010a140200","c6bb3062-0644-11ea-93a6-42010a140200","c6bb4552-0644-11ea-93a6-42010a140200","c6bd6346-0644-11ea-93a6-42010a140200","c6bd6346-0644-11ea-93a6-42010a140200","c6bd79c6-0644-11ea-93a6-42010a140200","c6bd79c6-0644-11ea-93a6-42010a140200","c6bd9064-0644-11ea-93a6-42010a140200","c6bd79c6-0644-11ea-93a6-42010a140200","c6bda950-0644-11ea-93a6-42010a140200","c6bd79c6-0644-11ea-93a6-42010a140200","c6bdc070-0644-11ea-93a6-42010a140200","c6bd79c6-0644-11ea-93a6-42010a140200","c6bdd628-0644-11ea-93a6-42010a140200","c6bd79c6-0644-11ea-93a6-42010a140200","c6bdea82-0644-11ea-93a6-42010a140200","c6bd79c6-0644-11ea-93a6-42010a140200","c6bdfef0-0644-11ea-93a6-42010a140200","c6be13cc-0644-11ea-93a6-42010a140200","c6be29de-0644-11ea-93a6-42010a140200","c6be5210-0644-11ea-93a6-42010a140200","c6be6520-0644-11ea-93a6-42010a140200","c6be7e7a-0644-11ea-93a6-42010a140200","c6be922a-0644-11ea-93a6-42010a140200","c6bea544-0644-11ea-93a6-42010a140200","c6beb9da-0644-11ea-93a6-42010a140200","c6becd44-0644-11ea-93a6-42010a140200","c6bee07c-0644-11ea-93a6-42010a140200","c6bef38c-0644-11ea-93a6-42010a140200","c6bf0ac0-0644-11ea-93a6-42010a140200","c6bf1e70-0644-11ea-93a6-42010a140200","c6bf3176-0644-11ea-93a6-42010a140200","c6bff07a-0644-11ea-93a6-42010a140200","c6bff07a-0644-11ea-93a6-42010a140200","c6c003bc-0644-11ea-93a6-42010a140200","c6c003bc-0644-11ea-93a6-42010a140200","c6c01884-0644-11ea-93a6-42010a140200","c6c003bc-0644-11ea-93a6-42010a140200","c6c02d60-0644-11ea-93a6-42010a140200","c6c003bc-0644-11ea-93a6-42010a140200","c6c04336-0644-11ea-93a6-42010a140200","c6c003bc-0644-11ea-93a6-42010a140200","c6c059ac-0644-11ea-93a6-42010a140200","c6c003bc-0644-11ea-93a6-42010a140200","c6c06f32-0644-11ea-93a6-42010a140200","c6c003bc-0644-11ea-93a6-42010a140200","c6c0867a-0644-11ea-93a6-42010a140200","c6c09c32-0644-11ea-93a6-42010a140200","c6c0b15e-0644-11ea-93a6-42010a140200","c6c0dda0-0644-11ea-93a6-42010a140200","c6c0f18c-0644-11ea-93a6-42010a140200","c6c10bf4-0644-11ea-93a6-42010a140200","c6c121b6-0644-11ea-93a6-42010a140200","c6c13656-0644-11ea-93a6-42010a140200","c6c14a88-0644-11ea-93a6-42010a140200","c6c16a36-0644-11ea-93a6-42010a140200","c6c1878c-0644-11ea-93a6-42010a140200","c6c19be6-0644-11ea-93a6-42010a140200","c6c1b1bc-0644-11ea-93a6-42010a140200","c6c1c7ec-0644-11ea-93a6-42010a140200","c6c1dc0a-0644-11ea-93a6-42010a140200","c6c29b4a-0644-11ea-93a6-42010a140200","c6c29b4a-0644-11ea-93a6-42010a140200","c6c2af5e-0644-11ea-93a6-42010a140200","c6c2af5e-0644-11ea-93a6-42010a140200","c6c2c52a-0644-11ea-93a6-42010a140200","c6c2af5e-0644-11ea-93a6-42010a140200","c6c2daa6-0644-11ea-93a6-42010a140200","c6c2af5e-0644-11ea-93a6-42010a140200","c6c2f0d6-0644-11ea-93a6-42010a140200","c6c2af5e-0644-11ea-93a6-42010a140200","c6c30846-0644-11ea-93a6-42010a140200","c6c2af5e-0644-11ea-93a6-42010a140200","c6c31d86-0644-11ea-93a6-42010a140200","c6c2af5e-0644-11ea-93a6-42010a140200","c6c332c6-0644-11ea-93a6-42010a140200","c6c3473e-0644-11ea-93a6-42010a140200","c6c35cf6-0644-11ea-93a6-42010a140200","c6c38622-0644-11ea-93a6-42010a140200","c6c39bb2-0644-11ea-93a6-42010a140200","c6c3b566-0644-11ea-93a6-42010a140200","c6c3ca1a-0644-11ea-93a6-42010a140200","c6c3de60-0644-11ea-93a6-42010a140200","c6c3f350-0644-11ea-93a6-42010a140200","c6c40714-0644-11ea-93a6-42010a140200","c6c41b78-0644-11ea-93a6-42010a140200","c6c43004-0644-11ea-93a6-42010a140200","c6c4460c-0644-11ea-93a6-42010a140200","c6c45a48-0644-11ea-93a6-42010a140200","c6c46f60-0644-11ea-93a6-42010a140200","c6c48450-0644-11ea-93a6-42010a140200","c6c49be8-0644-11ea-93a6-42010a140200","c6c4b13c-0644-11ea-93a6-42010a140200","c6c4b13c-0644-11ea-93a6-42010a140200","c6c4c6f4-0644-11ea-93a6-42010a140200","c6c4c6f4-0644-11ea-93a6-42010a140200","c6c4dcf2-0644-11ea-93a6-42010a140200","c6c4f1f6-0644-11ea-93a6-42010a140200"],"to":["c697456c-0644-11ea-93a6-42010a140200","c6966b24-0644-11ea-93a6-42010a140200","c6971c9a-0644-11ea-93a6-42010a140200","c696844c-0644-11ea-93a6-42010a140200","c697062e-0644-11ea-93a6-42010a140200","c6969a54-0644-11ea-93a6-42010a140200","c697062e-0644-11ea-93a6-42010a140200","c696b034-0644-11ea-93a6-42010a140200","c697062e-0644-11ea-93a6-42010a140200","c696c542-0644-11ea-93a6-42010a140200","c697062e-0644-11ea-93a6-42010a140200","c696d9d8-0644-11ea-93a6-42010a140200","c697062e-0644-11ea-93a6-42010a140200","c696ef40-0644-11ea-93a6-42010a140200","c697062e-0644-11ea-93a6-42010a140200","c6971c9a-0644-11ea-93a6-42010a140200","c697456c-0644-11ea-93a6-42010a140200","c697587c-0644-11ea-93a6-42010a140200","c698153c-0644-11ea-93a6-42010a140200","c697ecce-0644-11ea-93a6-42010a140200","c697ecce-0644-11ea-93a6-42010a140200","c697ecce-0644-11ea-93a6-42010a140200","c697ecce-0644-11ea-93a6-42010a140200","c697ecce-0644-11ea-93a6-42010a140200","c697ecce-0644-11ea-93a6-42010a140200","c69801aa-0644-11ea-93a6-42010a140200","c698153c-0644-11ea-93a6-42010a140200","c698293c-0644-11ea-93a6-42010a140200","c6c49be8-0644-11ea-93a6-42010a140200","c6aabf3e-0644-11ea-93a6-42010a140200","c6a9e802-0644-11ea-93a6-42010a140200","c6aa96b2-0644-11ea-93a6-42010a140200","c6aa0008-0644-11ea-93a6-42010a140200","c6aa7fce-0644-11ea-93a6-42010a140200","c6aa1552-0644-11ea-93a6-42010a140200","c6aa7fce-0644-11ea-93a6-42010a140200","c6aa2b5a-0644-11ea-93a6-42010a140200","c6aa7fce-0644-11ea-93a6-42010a140200","c6aa4022-0644-11ea-93a6-42010a140200","c6aa7fce-0644-11ea-93a6-42010a140200","c6aa5544-0644-11ea-93a6-42010a140200","c6aa7fce-0644-11ea-93a6-42010a140200","c6aa6a0c-0644-11ea-93a6-42010a140200","c6aa7fce-0644-11ea-93a6-42010a140200","c6aa96b2-0644-11ea-93a6-42010a140200","c6aabf3e-0644-11ea-93a6-42010a140200","c6aad316-0644-11ea-93a6-42010a140200","c6ab938c-0644-11ea-93a6-42010a140200","c6ab686c-0644-11ea-93a6-42010a140200","c6ab686c-0644-11ea-93a6-42010a140200","c6ab686c-0644-11ea-93a6-42010a140200","c6ab686c-0644-11ea-93a6-42010a140200","c6ab686c-0644-11ea-93a6-42010a140200","c6ab686c-0644-11ea-93a6-42010a140200","c6ab7ec4-0644-11ea-93a6-42010a140200","c6ab938c-0644-11ea-93a6-42010a140200","c6aba728-0644-11ea-93a6-42010a140200","c6c48450-0644-11ea-93a6-42010a140200","c6ad56ea-0644-11ea-93a6-42010a140200","c6ac7f04-0644-11ea-93a6-42010a140200","c6ad2a1c-0644-11ea-93a6-42010a140200","c6ac9534-0644-11ea-93a6-42010a140200","c6ad1572-0644-11ea-93a6-42010a140200","c6acaa88-0644-11ea-93a6-42010a140200","c6ad1572-0644-11ea-93a6-42010a140200","c6acbf8c-0644-11ea-93a6-42010a140200","c6ad1572-0644-11ea-93a6-42010a140200","c6acd53a-0644-11ea-93a6-42010a140200","c6ad1572-0644-11ea-93a6-42010a140200","c6aceade-0644-11ea-93a6-42010a140200","c6ad1572-0644-11ea-93a6-42010a140200","c6ad00dc-0644-11ea-93a6-42010a140200","c6ad1572-0644-11ea-93a6-42010a140200","c6ad2a1c-0644-11ea-93a6-42010a140200","c6ad56ea-0644-11ea-93a6-42010a140200","c6ad6aea-0644-11ea-93a6-42010a140200","c6ae24d0-0644-11ea-93a6-42010a140200","c6adfbcc-0644-11ea-93a6-42010a140200","c6adfbcc-0644-11ea-93a6-42010a140200","c6adfbcc-0644-11ea-93a6-42010a140200","c6adfbcc-0644-11ea-93a6-42010a140200","c6adfbcc-0644-11ea-93a6-42010a140200","c6adfbcc-0644-11ea-93a6-42010a140200","c6ae1076-0644-11ea-93a6-42010a140200","c6ae24d0-0644-11ea-93a6-42010a140200","c6ae3948-0644-11ea-93a6-42010a140200","c6c48450-0644-11ea-93a6-42010a140200","c6afdfb4-0644-11ea-93a6-42010a140200","c6af0b7a-0644-11ea-93a6-42010a140200","c6afb7f0-0644-11ea-93a6-42010a140200","c6af21aa-0644-11ea-93a6-42010a140200","c6afa2c4-0644-11ea-93a6-42010a140200","c6af379e-0644-11ea-93a6-42010a140200","c6afa2c4-0644-11ea-93a6-42010a140200","c6af4c7a-0644-11ea-93a6-42010a140200","c6afa2c4-0644-11ea-93a6-42010a140200","c6af61ce-0644-11ea-93a6-42010a140200","c6afa2c4-0644-11ea-93a6-42010a140200","c6af7880-0644-11ea-93a6-42010a140200","c6afa2c4-0644-11ea-93a6-42010a140200","c6af8d70-0644-11ea-93a6-42010a140200","c6afa2c4-0644-11ea-93a6-42010a140200","c6afb7f0-0644-11ea-93a6-42010a140200","c6afdfb4-0644-11ea-93a6-42010a140200","c6aff3aa-0644-11ea-93a6-42010a140200","c6b0b664-0644-11ea-93a6-42010a140200","c6b0893c-0644-11ea-93a6-42010a140200","c6b0893c-0644-11ea-93a6-42010a140200","c6b0893c-0644-11ea-93a6-42010a140200","c6b0893c-0644-11ea-93a6-42010a140200","c6b0893c-0644-11ea-93a6-42010a140200","c6b0893c-0644-11ea-93a6-42010a140200","c6b09f9e-0644-11ea-93a6-42010a140200","c6b0b664-0644-11ea-93a6-42010a140200","c6b0ca1e-0644-11ea-93a6-42010a140200","c6c48450-0644-11ea-93a6-42010a140200","c6b276ac-0644-11ea-93a6-42010a140200","c6b19caa-0644-11ea-93a6-42010a140200","c6b2497a-0644-11ea-93a6-42010a140200","c6b1b28a-0644-11ea-93a6-42010a140200","c6b2326e-0644-11ea-93a6-42010a140200","c6b1c82e-0644-11ea-93a6-42010a140200","c6b2326e-0644-11ea-93a6-42010a140200","c6b1de18-0644-11ea-93a6-42010a140200","c6b2326e-0644-11ea-93a6-42010a140200","c6b1f394-0644-11ea-93a6-42010a140200","c6b2326e-0644-11ea-93a6-42010a140200","c6b2082a-0644-11ea-93a6-42010a140200","c6b2326e-0644-11ea-93a6-42010a140200","c6b21df6-0644-11ea-93a6-42010a140200","c6b2326e-0644-11ea-93a6-42010a140200","c6b2497a-0644-11ea-93a6-42010a140200","c6b276ac-0644-11ea-93a6-42010a140200","c6b28e3a-0644-11ea-93a6-42010a140200","c6b34e7e-0644-11ea-93a6-42010a140200","c6b3234a-0644-11ea-93a6-42010a140200","c6b3234a-0644-11ea-93a6-42010a140200","c6b3234a-0644-11ea-93a6-42010a140200","c6b3234a-0644-11ea-93a6-42010a140200","c6b3234a-0644-11ea-93a6-42010a140200","c6b3234a-0644-11ea-93a6-42010a140200","c6b338bc-0644-11ea-93a6-42010a140200","c6b34e7e-0644-11ea-93a6-42010a140200","c6b3626a-0644-11ea-93a6-42010a140200","c6c48450-0644-11ea-93a6-42010a140200","c6b51f10-0644-11ea-93a6-42010a140200","c6b43f1e-0644-11ea-93a6-42010a140200","c6b4f08a-0644-11ea-93a6-42010a140200","c6b457b0-0644-11ea-93a6-42010a140200","c6b4d9ec-0644-11ea-93a6-42010a140200","c6b46e6c-0644-11ea-93a6-42010a140200","c6b4d9ec-0644-11ea-93a6-42010a140200","c6b483d4-0644-11ea-93a6-42010a140200","c6b4d9ec-0644-11ea-93a6-42010a140200","c6b499dc-0644-11ea-93a6-42010a140200","c6b4d9ec-0644-11ea-93a6-42010a140200","c6b4b016-0644-11ea-93a6-42010a140200","c6b4d9ec-0644-11ea-93a6-42010a140200","c6b4c4fc-0644-11ea-93a6-42010a140200","c6b4d9ec-0644-11ea-93a6-42010a140200","c6b4f08a-0644-11ea-93a6-42010a140200","c6b51f10-0644-11ea-93a6-42010a140200","c6b5346e-0644-11ea-93a6-42010a140200","c6b5f7e6-0644-11ea-93a6-42010a140200","c6b5ce1a-0644-11ea-93a6-42010a140200","c6b5ce1a-0644-11ea-93a6-42010a140200","c6b5ce1a-0644-11ea-93a6-42010a140200","c6b5ce1a-0644-11ea-93a6-42010a140200","c6b5ce1a-0644-11ea-93a6-42010a140200","c6b5ce1a-0644-11ea-93a6-42010a140200","c6b5e3aa-0644-11ea-93a6-42010a140200","c6b5f7e6-0644-11ea-93a6-42010a140200","c6b60c4a-0644-11ea-93a6-42010a140200","c6c48450-0644-11ea-93a6-42010a140200","c6b7bffe-0644-11ea-93a6-42010a140200","c6b6e6a6-0644-11ea-93a6-42010a140200","c6b79722-0644-11ea-93a6-42010a140200","c6b6fdda-0644-11ea-93a6-42010a140200","c6b78142-0644-11ea-93a6-42010a140200","c6b71356-0644-11ea-93a6-42010a140200","c6b78142-0644-11ea-93a6-42010a140200","c6b7290e-0644-11ea-93a6-42010a140200","c6b78142-0644-11ea-93a6-42010a140200","c6b73e4e-0644-11ea-93a6-42010a140200","c6b78142-0644-11ea-93a6-42010a140200","c6b753c0-0644-11ea-93a6-42010a140200","c6b78142-0644-11ea-93a6-42010a140200","c6b76c5c-0644-11ea-93a6-42010a140200","c6b78142-0644-11ea-93a6-42010a140200","c6b79722-0644-11ea-93a6-42010a140200","c6b7bffe-0644-11ea-93a6-42010a140200","c6b7d368-0644-11ea-93a6-42010a140200","c6b8982a-0644-11ea-93a6-42010a140200","c6b86c4c-0644-11ea-93a6-42010a140200","c6b86c4c-0644-11ea-93a6-42010a140200","c6b86c4c-0644-11ea-93a6-42010a140200","c6b86c4c-0644-11ea-93a6-42010a140200","c6b86c4c-0644-11ea-93a6-42010a140200","c6b86c4c-0644-11ea-93a6-42010a140200","c6b8820e-0644-11ea-93a6-42010a140200","c6b8982a-0644-11ea-93a6-42010a140200","c6b8ac48-0644-11ea-93a6-42010a140200","c6c48450-0644-11ea-93a6-42010a140200","c6ba5bec-0644-11ea-93a6-42010a140200","c6b98604-0644-11ea-93a6-42010a140200","c6ba336a-0644-11ea-93a6-42010a140200","c6b99c66-0644-11ea-93a6-42010a140200","c6ba1de4-0644-11ea-93a6-42010a140200","c6b9b1ec-0644-11ea-93a6-42010a140200","c6ba1de4-0644-11ea-93a6-42010a140200","c6b9c808-0644-11ea-93a6-42010a140200","c6ba1de4-0644-11ea-93a6-42010a140200","c6b9df5a-0644-11ea-93a6-42010a140200","c6ba1de4-0644-11ea-93a6-42010a140200","c6b9f436-0644-11ea-93a6-42010a140200","c6ba1de4-0644-11ea-93a6-42010a140200","c6ba09b2-0644-11ea-93a6-42010a140200","c6ba1de4-0644-11ea-93a6-42010a140200","c6ba336a-0644-11ea-93a6-42010a140200","c6ba5bec-0644-11ea-93a6-42010a140200","c6ba71a4-0644-11ea-93a6-42010a140200","c6bb3062-0644-11ea-93a6-42010a140200","c6bb05ce-0644-11ea-93a6-42010a140200","c6bb05ce-0644-11ea-93a6-42010a140200","c6bb05ce-0644-11ea-93a6-42010a140200","c6bb05ce-0644-11ea-93a6-42010a140200","c6bb05ce-0644-11ea-93a6-42010a140200","c6bb05ce-0644-11ea-93a6-42010a140200","c6bb1bf4-0644-11ea-93a6-42010a140200","c6bb3062-0644-11ea-93a6-42010a140200","c6bb4552-0644-11ea-93a6-42010a140200","c6c48450-0644-11ea-93a6-42010a140200","c6be5210-0644-11ea-93a6-42010a140200","c6bd79c6-0644-11ea-93a6-42010a140200","c6be29de-0644-11ea-93a6-42010a140200","c6bd9064-0644-11ea-93a6-42010a140200","c6be13cc-0644-11ea-93a6-42010a140200","c6bda950-0644-11ea-93a6-42010a140200","c6be13cc-0644-11ea-93a6-42010a140200","c6bdc070-0644-11ea-93a6-42010a140200","c6be13cc-0644-11ea-93a6-42010a140200","c6bdd628-0644-11ea-93a6-42010a140200","c6be13cc-0644-11ea-93a6-42010a140200","c6bdea82-0644-11ea-93a6-42010a140200","c6be13cc-0644-11ea-93a6-42010a140200","c6bdfef0-0644-11ea-93a6-42010a140200","c6be13cc-0644-11ea-93a6-42010a140200","c6be29de-0644-11ea-93a6-42010a140200","c6be5210-0644-11ea-93a6-42010a140200","c6be6520-0644-11ea-93a6-42010a140200","c6bf1e70-0644-11ea-93a6-42010a140200","c6bef38c-0644-11ea-93a6-42010a140200","c6bef38c-0644-11ea-93a6-42010a140200","c6bef38c-0644-11ea-93a6-42010a140200","c6bef38c-0644-11ea-93a6-42010a140200","c6bef38c-0644-11ea-93a6-42010a140200","c6bef38c-0644-11ea-93a6-42010a140200","c6bf0ac0-0644-11ea-93a6-42010a140200","c6bf1e70-0644-11ea-93a6-42010a140200","c6bf3176-0644-11ea-93a6-42010a140200","c6c48450-0644-11ea-93a6-42010a140200","c6c0dda0-0644-11ea-93a6-42010a140200","c6c003bc-0644-11ea-93a6-42010a140200","c6c0b15e-0644-11ea-93a6-42010a140200","c6c01884-0644-11ea-93a6-42010a140200","c6c09c32-0644-11ea-93a6-42010a140200","c6c02d60-0644-11ea-93a6-42010a140200","c6c09c32-0644-11ea-93a6-42010a140200","c6c04336-0644-11ea-93a6-42010a140200","c6c09c32-0644-11ea-93a6-42010a140200","c6c059ac-0644-11ea-93a6-42010a140200","c6c09c32-0644-11ea-93a6-42010a140200","c6c06f32-0644-11ea-93a6-42010a140200","c6c09c32-0644-11ea-93a6-42010a140200","c6c0867a-0644-11ea-93a6-42010a140200","c6c09c32-0644-11ea-93a6-42010a140200","c6c0b15e-0644-11ea-93a6-42010a140200","c6c0dda0-0644-11ea-93a6-42010a140200","c6c0f18c-0644-11ea-93a6-42010a140200","c6c1c7ec-0644-11ea-93a6-42010a140200","c6c19be6-0644-11ea-93a6-42010a140200","c6c19be6-0644-11ea-93a6-42010a140200","c6c19be6-0644-11ea-93a6-42010a140200","c6c19be6-0644-11ea-93a6-42010a140200","c6c19be6-0644-11ea-93a6-42010a140200","c6c19be6-0644-11ea-93a6-42010a140200","c6c1b1bc-0644-11ea-93a6-42010a140200","c6c1c7ec-0644-11ea-93a6-42010a140200","c6c1dc0a-0644-11ea-93a6-42010a140200","c6c48450-0644-11ea-93a6-42010a140200","c6c38622-0644-11ea-93a6-42010a140200","c6c2af5e-0644-11ea-93a6-42010a140200","c6c35cf6-0644-11ea-93a6-42010a140200","c6c2c52a-0644-11ea-93a6-42010a140200","c6c3473e-0644-11ea-93a6-42010a140200","c6c2daa6-0644-11ea-93a6-42010a140200","c6c3473e-0644-11ea-93a6-42010a140200","c6c2f0d6-0644-11ea-93a6-42010a140200","c6c3473e-0644-11ea-93a6-42010a140200","c6c30846-0644-11ea-93a6-42010a140200","c6c3473e-0644-11ea-93a6-42010a140200","c6c31d86-0644-11ea-93a6-42010a140200","c6c3473e-0644-11ea-93a6-42010a140200","c6c332c6-0644-11ea-93a6-42010a140200","c6c3473e-0644-11ea-93a6-42010a140200","c6c35cf6-0644-11ea-93a6-42010a140200","c6c38622-0644-11ea-93a6-42010a140200","c6c39bb2-0644-11ea-93a6-42010a140200","c6c45a48-0644-11ea-93a6-42010a140200","c6c43004-0644-11ea-93a6-42010a140200","c6c43004-0644-11ea-93a6-42010a140200","c6c43004-0644-11ea-93a6-42010a140200","c6c43004-0644-11ea-93a6-42010a140200","c6c43004-0644-11ea-93a6-42010a140200","c6c43004-0644-11ea-93a6-42010a140200","c6c4460c-0644-11ea-93a6-42010a140200","c6c45a48-0644-11ea-93a6-42010a140200","c6c46f60-0644-11ea-93a6-42010a140200","c6c48450-0644-11ea-93a6-42010a140200","c6c49be8-0644-11ea-93a6-42010a140200","c6c4b13c-0644-11ea-93a6-42010a140200","c6c4f1f6-0644-11ea-93a6-42010a140200","c6c4c6f4-0644-11ea-93a6-42010a140200","c6c4f1f6-0644-11ea-93a6-42010a140200","c6c4dcf2-0644-11ea-93a6-42010a140200","c6c4f1f6-0644-11ea-93a6-42010a140200","c6c506c8-0644-11ea-93a6-42010a140200"],"label":["","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot"},"manipulation":{"enabled":false},"edges":{"arrows":"to"},"layout":{"hierarchical":{"enabled":true,"levelSeparation":500,"nodeSpacing":200,"direction":"RL"}},"groups":{"useDefaultGroups":true,"none":{"color":{"border":"black","background":"white"}}}},"groups":["none"],"width":"100%","height":"400px","idselection":{"enabled":false},"byselection":{"enabled":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)"},"evals":[],"jsHooks":[]}</script>
 <!--
 We can also use `Lrnr_cv` to build a super learner, cross-validate a stack of 
 learners to compare performance of the learners in the stack, or cross-validate
@@ -1226,16 +1225,16 @@ introductory tutorial](https://tlverse.org/sl3/articles/intro_sl3.html)).
 ### 3. Train the super learner on the machine learning task {-}</p>
 <p>Now we are ready to <strong>“train”</strong> our super learner on our <code>sl3_task</code> object,
 <code>washb_task</code>.</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1">sl_fit &lt;-<span class="st"> </span>sl<span class="op">$</span><span class="kw">train</span>(washb_task)</a></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1">sl_fit &lt;-<span class="st"> </span>sl<span class="op">$</span><span class="kw">train</span>(washb_task)</a></code></pre></div>
 </div>
 <div id="obtain-predicted-values" class="section level3 unnumbered">
 <h3>4. Obtain predicted values</h3>
 <p>Now that we have fit the super learner, we are ready to obtain our predicted
 values, and we can also obtain a summary of the results.</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1">sl_preds &lt;-<span class="st"> </span>sl_fit<span class="op">$</span><span class="kw">predict</span>()</a>
-<a class="sourceLine" id="cb29-2" data-line-number="2"><span class="kw">head</span>(sl_preds)</a></code></pre></div>
-<pre><code>[1] -0.5593961 -0.8902979 -0.7620500 -0.7520223 -0.6772905 -0.7270881</code></pre>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1">sl_fit<span class="op">$</span><span class="kw">print</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1">sl_preds &lt;-<span class="st"> </span>sl_fit<span class="op">$</span><span class="kw">predict</span>()</a>
+<a class="sourceLine" id="cb28-2" data-line-number="2"><span class="kw">head</span>(sl_preds)</a></code></pre></div>
+<pre><code>[1] -0.4611854 -0.8928719 -0.7302960 -0.7641490 -0.6809357 -0.7241950</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1">sl_fit<span class="op">$</span><span class="kw">print</span>()</a></code></pre></div>
 <pre><code>[1] &quot;SuperLearner:&quot;
 List of 2
  $ : chr &quot;Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP-&gt;Stack)&quot;
@@ -1257,14 +1256,14 @@ List of 2
        weights
  1: 0.00000000
  2: 0.00000000
- 3: 0.24227474
+ 3: 0.24779789
  4: 0.00000000
- 5: 0.17317121
+ 5: 0.14772238
  6: 0.00000000
- 7: 0.03004505
+ 7: 0.04629427
  8: 0.00000000
- 9: 0.23168399
-10: 0.32880148
+ 9: 0.25695414
+10: 0.30677833
 11: 0.00000000
 12: 0.00000000
 [1] &quot;Cross-validated risk (MSE, squared error loss):&quot;
@@ -1285,17 +1284,17 @@ List of 2
     coefficients mean_risk    SE_risk    fold_SD fold_min_risk fold_max_risk
  1:           NA  1.015128 0.02363317 0.07629401     0.8927540      1.131594
  2:           NA  1.065282 0.02502664 0.09191791     0.9264292      1.196647
- 3:           NA  1.019206 0.02362484 0.08100156     0.8753326      1.150568
- 4:           NA  1.012689 0.02359874 0.07894330     0.8821712      1.130862
+ 3:           NA  1.018139 0.02371757 0.08044947     0.8816787      1.147313
+ 4:           NA  1.012662 0.02360216 0.07909089     0.8822292      1.130862
  5:           NA  1.015128 0.02363317 0.07629401     0.8927540      1.131594
  6:           NA  1.015119 0.02363328 0.07631510     0.8926608      1.131570
  7:           NA  1.018612 0.02380402 0.07799191     0.8956048      1.134940
  8:           NA  1.065282 0.02502664 0.09191791     0.9264292      1.196647
- 9:           NA  1.017700 0.02343712 0.07829554     0.8826330      1.136717
-10:           NA  1.012201 0.02358054 0.07946680     0.8826979      1.130414
+ 9:           NA  1.016467 0.02335182 0.08540813     0.8786255      1.164313
+10:           NA  1.012306 0.02359631 0.07921135     0.8826979      1.130114
 11:           NA  1.018612 0.02380402 0.07799191     0.8956048      1.134940
 12:           NA  1.018596 0.02380414 0.07801948     0.8954820      1.134909
-13:           NA  1.006207 0.02339759 0.07868666     0.8729051      1.127880</code></pre>
+13:           NA  1.005459 0.02339193 0.08022875     0.8729608      1.134108</code></pre>
 </div>
 </div>
 <div id="extensions" class="section level2">
@@ -1314,19 +1313,19 @@ cross-validation for computational efficiency.</p>
 <p>We also need to specify a loss function to evaluate super learner.
 Documentation for the available loss functions can be found in the <a href="https://tlverse.org/sl3/reference/loss_functions.html"><code>sl3</code> Loss
 Function Reference</a>.</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1">washb_task_new &lt;-<span class="st"> </span><span class="kw">make_sl3_Task</span>(</a>
-<a class="sourceLine" id="cb33-2" data-line-number="2">  <span class="dt">data =</span> washb_data,</a>
-<a class="sourceLine" id="cb33-3" data-line-number="3">  <span class="dt">covariates =</span> covars,</a>
-<a class="sourceLine" id="cb33-4" data-line-number="4">  <span class="dt">outcome =</span> outcome,</a>
-<a class="sourceLine" id="cb33-5" data-line-number="5">  <span class="dt">folds =</span> <span class="kw">make_folds</span>(washb_data, <span class="dt">fold_fun =</span> folds_vfold, <span class="dt">V =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb33-6" data-line-number="6">)</a></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1">washb_task_new &lt;-<span class="st"> </span><span class="kw">make_sl3_Task</span>(</a>
+<a class="sourceLine" id="cb32-2" data-line-number="2">  <span class="dt">data =</span> washb_data,</a>
+<a class="sourceLine" id="cb32-3" data-line-number="3">  <span class="dt">covariates =</span> covars,</a>
+<a class="sourceLine" id="cb32-4" data-line-number="4">  <span class="dt">outcome =</span> outcome,</a>
+<a class="sourceLine" id="cb32-5" data-line-number="5">  <span class="dt">folds =</span> <span class="kw">make_folds</span>(washb_data, <span class="dt">fold_fun =</span> folds_vfold, <span class="dt">V =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb32-6" data-line-number="6">)</a></code></pre></div>
 <pre><code>Warning in .subset2(public_bind_env, &quot;initialize&quot;)(...): Missing Covariate Data
 Found. Imputing covariates using sl3_process_missing.</code></pre>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1">CVsl &lt;-<span class="st"> </span><span class="kw">CV_lrnr_sl</span>(sl_fit, washb_task_new, loss_squared_error)</a>
-<a class="sourceLine" id="cb35-2" data-line-number="2">CVsl <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb35-3" data-line-number="3"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">digits =</span> <span class="dv">4</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb35-4" data-line-number="4"><span class="st">  </span><span class="kw">kable_styling</span>(<span class="dt">fixed_thead =</span> T, <span class="dt">font_size =</span> <span class="dv">10</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb35-5" data-line-number="5"><span class="st">  </span><span class="kw">scroll_box</span>(<span class="dt">width =</span> <span class="st">&quot;100%&quot;</span>, <span class="dt">height =</span> <span class="st">&quot;250px&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1">CVsl &lt;-<span class="st"> </span><span class="kw">CV_lrnr_sl</span>(sl_fit, washb_task_new, loss_squared_error)</a>
+<a class="sourceLine" id="cb34-2" data-line-number="2">CVsl <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb34-3" data-line-number="3"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">digits =</span> <span class="dv">4</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb34-4" data-line-number="4"><span class="st">  </span><span class="kw">kable_styling</span>(<span class="dt">fixed_thead =</span> T, <span class="dt">font_size =</span> <span class="dv">10</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb34-5" data-line-number="5"><span class="st">  </span><span class="kw">scroll_box</span>(<span class="dt">width =</span> <span class="st">&quot;100%&quot;</span>, <span class="dt">height =</span> <span class="st">&quot;250px&quot;</span>)</a></code></pre></div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:250px; overflow-x: scroll; width:100%; ">
 <table class="table" style="font-size: 10px; margin-left: auto; margin-right: auto;">
 <thead>
@@ -1363,19 +1362,19 @@ Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP-&gt;Stack)_Lrnr_glm_TRUE
 NA
 </td>
 <td style="text-align:right;">
-1.0317
+1.0153
 </td>
 <td style="text-align:right;">
-0.0240
+0.0235
 </td>
 <td style="text-align:right;">
-0.0086
+0.0133
 </td>
 <td style="text-align:right;">
-1.0256
+1.0060
 </td>
 <td style="text-align:right;">
-1.0378
+1.0247
 </td>
 </tr>
 <tr>
@@ -1386,19 +1385,19 @@ Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP-&gt;Stack)_Lrnr_mean
 NA
 </td>
 <td style="text-align:right;">
-1.0653
+1.0652
 </td>
 <td style="text-align:right;">
 0.0250
 </td>
 <td style="text-align:right;">
-0.0179
+0.0219
 </td>
 <td style="text-align:right;">
-1.0526
+1.0497
 </td>
 <td style="text-align:right;">
-1.0779
+1.0807
 </td>
 </tr>
 <tr>
@@ -1409,19 +1408,19 @@ Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP-&gt;Stack)_Lrnr_ranger_100_T
 NA
 </td>
 <td style="text-align:right;">
-1.0354
+1.0205
 </td>
 <td style="text-align:right;">
-0.0240
+0.0235
 </td>
 <td style="text-align:right;">
-0.0067
+0.0084
 </td>
 <td style="text-align:right;">
-1.0306
+1.0146
 </td>
 <td style="text-align:right;">
-1.0401
+1.0264
 </td>
 </tr>
 <tr>
@@ -1432,19 +1431,19 @@ Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP-&gt;Stack)_Lrnr_glmnet_NULL_
 NA
 </td>
 <td style="text-align:right;">
-1.0170
+1.0126
 </td>
 <td style="text-align:right;">
-0.0237
+0.0235
 </td>
 <td style="text-align:right;">
-0.0176
+0.0127
 </td>
 <td style="text-align:right;">
-1.0046
+1.0036
 </td>
 <td style="text-align:right;">
-1.0294
+1.0217
 </td>
 </tr>
 <tr>
@@ -1455,19 +1454,19 @@ Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP-&gt;Stack)_Lrnr_pkg_SuperLea
 NA
 </td>
 <td style="text-align:right;">
-1.0317
+1.0153
 </td>
 <td style="text-align:right;">
-0.0240
+0.0235
 </td>
 <td style="text-align:right;">
-0.0086
+0.0133
 </td>
 <td style="text-align:right;">
-1.0256
+1.0060
 </td>
 <td style="text-align:right;">
-1.0378
+1.0247
 </td>
 </tr>
 <tr>
@@ -1478,19 +1477,19 @@ Pipeline(Lrnr_pkg_SuperLearner_screener_screen.corP-&gt;Stack)_Lrnr_pkg_SuperLea
 NA
 </td>
 <td style="text-align:right;">
-1.0317
+1.0153
 </td>
 <td style="text-align:right;">
-0.0240
+0.0235
 </td>
 <td style="text-align:right;">
-0.0086
+0.0133
 </td>
 <td style="text-align:right;">
-1.0255
+1.0059
 </td>
 <td style="text-align:right;">
-1.0378
+1.0247
 </td>
 </tr>
 <tr>
@@ -1501,19 +1500,19 @@ Stack_Lrnr_glm_TRUE
 NA
 </td>
 <td style="text-align:right;">
-1.0502
+1.0244
 </td>
 <td style="text-align:right;">
-0.0284
+0.0248
 </td>
 <td style="text-align:right;">
-0.0157
+0.0250
 </td>
 <td style="text-align:right;">
-1.0392
+1.0067
 </td>
 <td style="text-align:right;">
-1.0613
+1.0421
 </td>
 </tr>
 <tr>
@@ -1524,19 +1523,19 @@ Stack_Lrnr_mean
 NA
 </td>
 <td style="text-align:right;">
-1.0653
+1.0652
 </td>
 <td style="text-align:right;">
 0.0250
 </td>
 <td style="text-align:right;">
-0.0179
+0.0219
 </td>
 <td style="text-align:right;">
-1.0526
+1.0497
 </td>
 <td style="text-align:right;">
-1.0779
+1.0807
 </td>
 </tr>
 <tr>
@@ -1547,19 +1546,19 @@ Stack_Lrnr_ranger_100_TRUE_1
 NA
 </td>
 <td style="text-align:right;">
-1.0218
+1.0216
 </td>
 <td style="text-align:right;">
-0.0235
+0.0234
 </td>
 <td style="text-align:right;">
-0.0101
+0.0161
 </td>
 <td style="text-align:right;">
-1.0146
+1.0102
 </td>
 <td style="text-align:right;">
-1.0289
+1.0330
 </td>
 </tr>
 <tr>
@@ -1570,19 +1569,19 @@ Stack_Lrnr_glmnet_NULL_deviance_10_1_100_TRUE
 NA
 </td>
 <td style="text-align:right;">
-1.0191
+1.0132
 </td>
 <td style="text-align:right;">
-0.0238
+0.0235
 </td>
 <td style="text-align:right;">
-0.0119
+0.0129
 </td>
 <td style="text-align:right;">
-1.0107
+1.0041
 </td>
 <td style="text-align:right;">
-1.0275
+1.0224
 </td>
 </tr>
 <tr>
@@ -1593,19 +1592,19 @@ Stack_Lrnr_pkg_SuperLearner_SL.gam
 NA
 </td>
 <td style="text-align:right;">
-1.0502
+1.0244
 </td>
 <td style="text-align:right;">
-0.0284
+0.0248
 </td>
 <td style="text-align:right;">
-0.0157
+0.0250
 </td>
 <td style="text-align:right;">
-1.0392
+1.0067
 </td>
 <td style="text-align:right;">
-1.0613
+1.0421
 </td>
 </tr>
 <tr>
@@ -1616,19 +1615,19 @@ Stack_Lrnr_pkg_SuperLearner_SL.bayesglm
 NA
 </td>
 <td style="text-align:right;">
-1.0502
+1.0244
 </td>
 <td style="text-align:right;">
-0.0285
+0.0249
 </td>
 <td style="text-align:right;">
-0.0157
+0.0251
 </td>
 <td style="text-align:right;">
-1.0391
+1.0067
 </td>
 <td style="text-align:right;">
-1.0613
+1.0421
 </td>
 </tr>
 <tr>
@@ -1639,19 +1638,19 @@ SuperLearner
 NA
 </td>
 <td style="text-align:right;">
-1.0162
+1.0076
 </td>
 <td style="text-align:right;">
-0.0236
+0.0234
 </td>
 <td style="text-align:right;">
-0.0135
+0.0115
 </td>
 <td style="text-align:right;">
-1.0067
+0.9995
 </td>
 <td style="text-align:right;">
-1.0257
+1.0157
 </td>
 </tr>
 </tbody>
@@ -1666,11 +1665,11 @@ difference between the learner fit with a permuted covariate and the learner
 fit with the true covariate, across all covariates.</p>
 <p>In this manner, the larger the risk difference, the more important the variable
 is in the prediction.</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1">washb_varimp &lt;-<span class="st"> </span><span class="kw">varimp</span>(sl_fit, loss_squared_error)</a>
-<a class="sourceLine" id="cb36-2" data-line-number="2">washb_varimp <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb36-3" data-line-number="3"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">digits =</span> <span class="dv">4</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb36-4" data-line-number="4"><span class="st">  </span><span class="kw">kable_styling</span>(<span class="dt">fixed_thead =</span> T, <span class="dt">font_size =</span> <span class="dv">10</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb36-5" data-line-number="5"><span class="st">  </span><span class="kw">scroll_box</span>(<span class="dt">width =</span> <span class="st">&quot;100%&quot;</span>, <span class="dt">height =</span> <span class="st">&quot;250px&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1">washb_varimp &lt;-<span class="st"> </span><span class="kw">varimp</span>(sl_fit, loss_squared_error)</a>
+<a class="sourceLine" id="cb35-2" data-line-number="2">washb_varimp <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb35-3" data-line-number="3"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">digits =</span> <span class="dv">4</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb35-4" data-line-number="4"><span class="st">  </span><span class="kw">kable_styling</span>(<span class="dt">fixed_thead =</span> T, <span class="dt">font_size =</span> <span class="dv">10</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb35-5" data-line-number="5"><span class="st">  </span><span class="kw">scroll_box</span>(<span class="dt">width =</span> <span class="st">&quot;100%&quot;</span>, <span class="dt">height =</span> <span class="st">&quot;250px&quot;</span>)</a></code></pre></div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:250px; overflow-x: scroll; width:100%; ">
 <table class="table" style="font-size: 10px; margin-left: auto; margin-right: auto;">
 <thead>
@@ -1689,7 +1688,7 @@ risk_diff
 aged
 </td>
 <td style="text-align:right;">
-0.0379
+0.0517
 </td>
 </tr>
 <tr>
@@ -1697,7 +1696,7 @@ aged
 momedu
 </td>
 <td style="text-align:right;">
-0.0087
+0.0090
 </td>
 </tr>
 <tr>
@@ -1705,15 +1704,7 @@ momedu
 tr
 </td>
 <td style="text-align:right;">
-0.0051
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-momheight
-</td>
-<td style="text-align:right;">
-0.0049
+0.0061
 </td>
 </tr>
 <tr>
@@ -1721,79 +1712,7 @@ momheight
 month
 </td>
 <td style="text-align:right;">
-0.0047
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-asset_refrig
-</td>
-<td style="text-align:right;">
-0.0035
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-floor
-</td>
-<td style="text-align:right;">
-0.0035
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-asset_chair
-</td>
-<td style="text-align:right;">
-0.0031
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Nlt18
-</td>
-<td style="text-align:right;">
-0.0029
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-elec
-</td>
-<td style="text-align:right;">
-0.0022
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-asset_chouki
-</td>
-<td style="text-align:right;">
-0.0022
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-asset_moto
-</td>
-<td style="text-align:right;">
-0.0009
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-asset_khat
-</td>
-<td style="text-align:right;">
-0.0008
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-walls
-</td>
-<td style="text-align:right;">
-0.0007
+0.0059
 </td>
 </tr>
 <tr>
@@ -1801,23 +1720,39 @@ walls
 fracode
 </td>
 <td style="text-align:right;">
-0.0007
+0.0049
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-momage
+momheight
 </td>
 <td style="text-align:right;">
-0.0006
+0.0033
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-sex
+asset_refrig
 </td>
 <td style="text-align:right;">
-0.0004
+0.0032
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Nlt18
+</td>
+<td style="text-align:right;">
+0.0028
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+floor
+</td>
+<td style="text-align:right;">
+0.0028
 </td>
 </tr>
 <tr>
@@ -1825,7 +1760,71 @@ sex
 hfiacat
 </td>
 <td style="text-align:right;">
-0.0004
+0.0022
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+momage
+</td>
+<td style="text-align:right;">
+0.0021
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+asset_chair
+</td>
+<td style="text-align:right;">
+0.0019
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+asset_chouki
+</td>
+<td style="text-align:right;">
+0.0017
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+elec
+</td>
+<td style="text-align:right;">
+0.0014
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+asset_moto
+</td>
+<td style="text-align:right;">
+0.0012
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+asset_table
+</td>
+<td style="text-align:right;">
+0.0010
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+walls
+</td>
+<td style="text-align:right;">
+0.0008
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+sex
+</td>
+<td style="text-align:right;">
+0.0007
 </td>
 </tr>
 <tr>
@@ -1833,12 +1832,20 @@ hfiacat
 asset_wardrobe
 </td>
 <td style="text-align:right;">
-0.0003
+0.0006
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-asset_table
+asset_tv
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+watmin
 </td>
 <td style="text-align:right;">
 0.0000
@@ -1854,7 +1861,15 @@ delta_momage
 </tr>
 <tr>
 <td style="text-align:left;">
-asset_tv
+asset_bike
+</td>
+<td style="text-align:right;">
+-0.0001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+asset_khat
 </td>
 <td style="text-align:right;">
 -0.0001
@@ -1878,18 +1893,10 @@ delta_momheight
 </tr>
 <tr>
 <td style="text-align:left;">
-asset_bike
+asset_sewmach
 </td>
 <td style="text-align:right;">
--0.0003
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-watmin
-</td>
-<td style="text-align:right;">
--0.0003
+-0.0008
 </td>
 </tr>
 <tr>
@@ -1897,15 +1904,7 @@ watmin
 asset_mobile
 </td>
 <td style="text-align:right;">
--0.0005
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-asset_sewmach
-</td>
-<td style="text-align:right;">
--0.0010
+-0.0009
 </td>
 </tr>
 <tr>
@@ -1913,7 +1912,7 @@ asset_sewmach
 Ncomp
 </td>
 <td style="text-align:right;">
--0.0014
+-0.0015
 </td>
 </tr>
 </tbody>
@@ -1928,9 +1927,6 @@ Ncomp
 <p>Follow the steps below to predict myocardial infarction (<code>mi</code>) using the
 available covariate data. We thank Prof. David Benkeser at Emory University for
 making the this Cardiovascular Health Study (CHS) data accessible.</p>
-<p>Work with a buddy/team. You have 20 minutes.</p>
-<p>In the <a href="https://etherpad.net/p/acic2019-tlverse">etherpad</a>, submit your group’s
-answers to the following questions.</p>
 <ol style="list-style-type: decimal">
 <li>Which learner was the discrete super learner? What was the cross validated
 mean risk of the discrete super learner?</li>
@@ -1938,15 +1934,15 @@ mean risk of the discrete super learner?</li>
 <li>Did your group face any challenges?</li>
 <li>Any additional comments/questions about this <code>sl3</code> section of the workshop?</li>
 </ol>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1"><span class="co"># load the data set</span></a>
-<a class="sourceLine" id="cb37-2" data-line-number="2">db_data &lt;-</a>
-<a class="sourceLine" id="cb37-3" data-line-number="3"><span class="st">  </span><span class="kw">url</span>(<span class="st">&quot;https://raw.githubusercontent.com/benkeser/sllecture/master/chspred.csv&quot;</span>)</a>
-<a class="sourceLine" id="cb37-4" data-line-number="4">chspred &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="dt">file =</span> db_data, <span class="dt">col_names =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb37-5" data-line-number="5"><span class="co"># take a quick peek</span></a>
-<a class="sourceLine" id="cb37-6" data-line-number="6"><span class="kw">head</span>(chspred) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb37-7" data-line-number="7"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">digits =</span> <span class="dv">4</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb37-8" data-line-number="8"><span class="st">  </span><span class="kw">kable_styling</span>(<span class="dt">fixed_thead =</span> T, <span class="dt">font_size =</span> <span class="dv">10</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb37-9" data-line-number="9"><span class="st">  </span><span class="kw">scroll_box</span>(<span class="dt">width =</span> <span class="st">&quot;100%&quot;</span>, <span class="dt">height =</span> <span class="st">&quot;200px&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1"><span class="co"># load the data set</span></a>
+<a class="sourceLine" id="cb36-2" data-line-number="2">db_data &lt;-</a>
+<a class="sourceLine" id="cb36-3" data-line-number="3"><span class="st">  </span><span class="kw">url</span>(<span class="st">&quot;https://raw.githubusercontent.com/benkeser/sllecture/master/chspred.csv&quot;</span>)</a>
+<a class="sourceLine" id="cb36-4" data-line-number="4">chspred &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="dt">file =</span> db_data, <span class="dt">col_names =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb36-5" data-line-number="5"><span class="co"># take a quick peek</span></a>
+<a class="sourceLine" id="cb36-6" data-line-number="6"><span class="kw">head</span>(chspred) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb36-7" data-line-number="7"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">digits =</span> <span class="dv">4</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb36-8" data-line-number="8"><span class="st">  </span><span class="kw">kable_styling</span>(<span class="dt">fixed_thead =</span> T, <span class="dt">font_size =</span> <span class="dv">10</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb36-9" data-line-number="9"><span class="st">  </span><span class="kw">scroll_box</span>(<span class="dt">width =</span> <span class="st">&quot;100%&quot;</span>, <span class="dt">height =</span> <span class="st">&quot;200px&quot;</span>)</a></code></pre></div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:200px; overflow-x: scroll; width:100%; ">
 <table class="table" style="font-size: 10px; margin-left: auto; margin-right: auto;">
 <thead>
@@ -2636,14 +2632,14 @@ TMLE.</p></li>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": {
+"github": true,
 "facebook": false,
 "twitter": true,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"],
-"github": true
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -2655,6 +2651,10 @@ gitbook.start({
 "text": "Edit"
 },
 "history": {
+"link": null,
+"text": null
+},
+"view": {
 "link": null,
 "text": null
 },
